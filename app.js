@@ -14,6 +14,13 @@ const bottle = (name, price, description, photo) => ({
   imageFit: "contain",
 });
 
+const partyServices = [
+  item("Festa bimbi", 8, "Servizio feste per bambini come da listino.", "lunch"),
+  item("Festa maxi", 18, "Formula feste maxi come da listino.", "hero"),
+  item("Tagliere pizza compleanno", 20, "Tagliere pizza per la festa di compleanno.", "lunch"),
+  item("Taglio torta", 1.5, "Servizio di taglio torta.", "breakfast"),
+];
+
 const menus = {
   day: {
     title: "Menu del giorno",
@@ -61,6 +68,10 @@ const menus = {
           item("Tessera Ginseng o Orzo grande", 15, "Formula prepagata, formato grande.", "breakfast"),
           item("Tessera Ginseng o Orzo piccolo", 13, "Formula prepagata, formato piccolo.", "breakfast"),
         ],
+      },
+      servizi: {
+        label: "Servizi feste",
+        items: partyServices,
       },
     },
   },
@@ -173,6 +184,10 @@ const menus = {
           item("Tagliere base", 10, "Selezione salata da condividere.", "lunch"),
           item("Tagliere premium", 13, "Selezione premium da condividere.", "lunch"),
         ],
+      },
+      servizi: {
+        label: "Servizi feste",
+        items: partyServices,
       },
       birre: {
         label: "Birre",
