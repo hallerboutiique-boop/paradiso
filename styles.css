@@ -586,6 +586,14 @@ body[data-theme="night"] .menu-card {
   border-right: 0;
 }
 
+.service-item:nth-child(3n) {
+  border-right: 0;
+}
+
+.service-item:nth-child(-n + 6) {
+  border-bottom: 1px solid var(--line);
+}
+
 .service-item > svg {
   width: 24px;
   height: 24px;

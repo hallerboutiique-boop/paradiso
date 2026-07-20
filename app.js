@@ -54,6 +54,7 @@ const menus = {
       tessere: {
         label: "Tessere",
         items: [
+          item("Profumo", 5, "Servizio disponibile come da listino.", "breakfast"),
           item("Tessera caffè", 11, "Formula prepagata per i tuoi caffè al Paradiso.", "breakfast"),
           item("Tessera cappuccino", 15, "Formula prepagata dedicata al cappuccino.", "breakfast"),
           item("Tessera cappuccino e brioche", 30, "Colazione completa in formula prepagata.", "breakfast"),
