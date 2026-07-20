@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Paradiso Lounge Bar a Nova Milanese: colazioni, pranzi, cocktail e prenotazioni online."
+    />
+    <meta name="theme-color" content="#f5fbff" />
+    <title>Paradiso | Lounge Bar Nova Milanese</title>
+    <link rel="preconnect" href="https://unpkg.com" />
+    <link rel="stylesheet" href="styles.css?v=20260714-2" />
+    <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body data-theme="day">
+    <header class="site-header" id="top">
+      <a class="brand" href="#top" aria-label="Paradiso, torna all'inizio">
+        <span class="brand-mark">P</span>
+        <span class="brand-name">Paradiso</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Navigazione principale">
+        <a href="#menu">Menu</a>
+        <a href="#prenota">Prenota</a>
+        <a href="#dove-siamo">Dove siamo</a>
+      </nav>
+
+      <div class="header-actions">
+        <a
+          class="icon-button instagram-link"
+          href="https://www.instagram.com/lounge_bar__paradiso/?hl=fr"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Apri Instagram"
+          title="Instagram"
+        >
+          <i data-lucide="instagram"></i>
+        </a>
+
+        <div class="theme-toggle compact" role="group" aria-label="Cambia versione del sito">
+          <button type="button" data-set-theme="day" aria-label="Versione giorno" title="Giorno">
+            <i data-lucide="sun"></i>
+          </button>
+          <button type="button" data-set-theme="night" aria-label="Versione notte" title="Notte">
+            <i data-lucide="moon"></i>
+          </button>
+        </div>
+
+        <button class="icon-button cart-trigger" type="button" aria-label="Apri carrello" title="Carrello">
+          <i data-lucide="shopping-bag"></i>
+          <span class="cart-count" aria-live="polite">0</span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <img src="assets/images/hero.jpg" alt="Il bancone elegante del Paradiso Lounge Bar" />
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <p class="eyebrow" id="hero-eyebrow">Lounge bar · Nova Milanese</p>
+          <h1 id="hero-title">Paradiso</h1>
+          <p class="hero-copy" id="hero-copy">Il buongiorno ha il profumo del caffè.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#menu">
+              <span id="hero-menu-label">Scopri il menu</span>
+              <i data-lucide="arrow-down"></i>
+            </a>
+            <a class="button secondary" href="#prenota">Prenota un tavolo</a>
+          </div>
+        </div>
+        <a class="hero-scroll" href="#menu" aria-label="Vai al menu" title="Vai al menu">
+          <i data-lucide="chevron-down"></i>
+        </a>
+      </section>
+
+      <section class="menu-section section" id="menu" aria-labelledby="menu-title">
+        <div class="section-inner">
+          <div class="section-heading menu-heading">
+            <div>
+              <p class="eyebrow">Il tuo momento</p>
+              <h2 id="menu-title">Menu del giorno</h2>
+              <p id="menu-intro">Colazioni curate e proposte semplici per la pausa pranzo.</p>
+            </div>
+            <div class="theme-toggle large" role="group" aria-label="Scegli menu giorno o sera">
+              <button type="button" data-set-theme="day">
+                <i data-lucide="sun"></i>
+                <span>Giorno</span>
+              </button>
+              <button type="button" data-set-theme="night">
+                <i data-lucide="moon"></i>
+                <span>Notte</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="category-tabs" id="category-tabs" role="tablist" aria-label="Categorie del menu"></div>
+          <div class="menu-grid" id="menu-grid" aria-live="polite"></div>
+          <div class="menu-more-wrap">
+            <button class="button outline" id="show-more" type="button">
+              <span>Mostra tutto</span>
+              <i data-lucide="chevrons-down"></i>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="service-strip" aria-label="Servizi e pagamento">
+        <div class="section-inner service-grid">
+          <div class="service-item">
+            <i data-lucide="calendar-check"></i>
+            <div><strong>Prenotazione tavolo</strong><span>Gratuita</span></div>
+          </div>
+          <div class="service-item">
+            <i data-lucide="concierge-bell"></i>
+            <div><strong>Servizio al tavolo</strong><span>Incluso</span></div>
+          </div>
+          <div class="service-item">
+            <i data-lucide="banknote"></i>
+            <div><strong>Pagamento</strong><span>Contanti o carta al locale</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="booking-section section" id="prenota" aria-labelledby="booking-title">
+        <div class="section-inner booking-layout">
+          <div class="booking-copy">
+            <p class="eyebrow">Il tuo tavolo</p>
+            <h2 id="booking-title">Prenota e ordina in anticipo</h2>
+            <p>
+              Scegli giorno, orario e numero di persone. Puoi aggiungere i prodotti dal menu oppure
+              inviare soltanto la prenotazione.
+            </p>
+            <div class="booking-note">
+              <i data-lucide="banknote"></i>
+              <span>Il conto si paga in contanti o con carta direttamente al locale.</span>
+            </div>
+            <div class="order-preview" id="order-preview">
+              <div class="order-preview-head">
+                <span>Il tuo ordine</span>
+                <strong id="preview-total">€ 0,00</strong>
+              </div>
+              <p id="preview-empty">Non hai ancora aggiunto prodotti.</p>
+              <ul id="preview-items"></ul>
+            </div>
+          </div>
+
+          <form class="booking-form" id="booking-form">
+            <div class="form-row two-columns">
+              <label>
+                Nome e cognome
+                <input name="name" autocomplete="name" required placeholder="Mario Rossi" />
+              </label>
+              <label>
+                Telefono
+                <input name="phone" type="tel" autocomplete="tel" required placeholder="+39 333 123 4567" />
+              </label>
+            </div>
+            <label>
+              Email <span class="optional">facoltativa</span>
+              <input name="email" type="email" autocomplete="email" placeholder="nome@email.it" />
+            </label>
+            <div class="form-row three-columns">
+              <label>
+                Data
+                <input name="date" id="booking-date" type="date" required />
+              </label>
+              <label>
+                Ora
+                <select name="time" required>
+                  <option value="">Scegli</option>
+                  <option>08:00</option><option>08:30</option><option>09:00</option><option>09:30</option>
+                  <option>10:00</option><option>10:30</option><option>11:00</option><option>11:30</option>
+                  <option>12:00</option><option>12:30</option><option>13:00</option><option>13:30</option>
+                  <option>18:00</option><option>18:30</option><option>19:00</option><option>19:30</option>
+                  <option>20:00</option><option>20:30</option><option>21:00</option><option>21:30</option>
+                  <option>22:00</option><option>22:30</option><option>23:00</option>
+                </select>
+              </label>
+              <label>
+                Persone
+                <input name="guests" type="number" min="1" max="20" value="2" required />
+              </label>
+            </div>
+            <label>
+              Note <span class="optional">facoltative</span>
+              <textarea name="notes" rows="3" placeholder="Allergie, richieste o occasione speciale"></textarea>
+            </label>
+            <label class="checkbox-label">
+              <input name="privacy" type="checkbox" required />
+              <span>Acconsento al trattamento dei dati per gestire la prenotazione.</span>
+            </label>
+            <button class="button primary submit-button" type="submit">
+              <i data-lucide="check"></i>
+              <span>Conferma prenotazione</span>
+            </button>
+            <p class="form-footnote">Nessun pagamento online. Riceverai un codice di prenotazione.</p>
+          </form>
+        </div>
+      </section>
+
+      <section class="location-section section" id="dove-siamo" aria-labelledby="location-title">
+        <div class="section-inner location-heading">
+          <div>
+            <p class="eyebrow">Dove siamo</p>
+            <h2 id="location-title">Ci vediamo al Paradiso</h2>
+          </div>
+          <a
+            class="address-link"
+            href="https://www.google.com/maps/dir/?api=1&amp;destination=Via+A.+Diaz%2C+4%2C+20834+Nova+Milanese+MB"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <i data-lucide="map-pin"></i>
+            <span>Via A. Diaz, 4<br />20834 Nova Milanese MB</span>
+          </a>
+        </div>
+        <div class="map-wrap">
+          <iframe
+            title="Mappa del Paradiso Lounge Bar"
+            src="https://www.openstreetmap.org/export/embed.html?bbox=9.1941666%2C45.5918709%2C9.2041666%2C45.5978709&amp;layer=mapnik&amp;marker=45.5948709%2C9.1991666"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="section-inner footer-inner">
+        <div class="footer-brand">
+          <span class="brand-mark">P</span>
+          <div><strong>Paradiso</strong><span>Lounge Bar · Nova Milanese</span></div>
+        </div>
+        <div class="footer-links">
+          <a href="https://www.instagram.com/lounge_bar__paradiso/?hl=fr" target="_blank" rel="noreferrer">
+            <i data-lucide="instagram"></i> Instagram
+          </a>
+          <a href="admin.html"><i data-lucide="lock-keyhole"></i> Area admin</a>
+        </div>
+        <p>© <span id="current-year"></span> Paradiso Lounge Bar</p>
+      </div>
+    </footer>
+
+    <div class="drawer-backdrop" id="drawer-backdrop"></div>
+    <aside class="cart-drawer" id="cart-drawer" aria-hidden="true" aria-labelledby="cart-title">
+      <div class="drawer-header">
+        <div>
+          <p class="eyebrow">Il tuo ordine</p>
+          <h2 id="cart-title">Carrello</h2>
+        </div>
+        <button class="icon-button cart-close" type="button" aria-label="Chiudi carrello" title="Chiudi">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="cart-items" id="cart-items"></div>
+      <div class="cart-footer">
+        <div class="cart-total"><span>Totale</span><strong id="cart-total">€ 0,00</strong></div>
+        <button class="button primary checkout-button" id="checkout-button" type="button">
+          <span>Vai alla prenotazione</span>
+          <i data-lucide="arrow-right"></i>
+        </button>
+        <small>Pagamento in contanti o con carta al locale</small>
+      </div>
+    </aside>
+
+    <dialog class="confirmation-dialog" id="confirmation-dialog">
+      <button class="icon-button dialog-close" type="button" aria-label="Chiudi" title="Chiudi">
+        <i data-lucide="x"></i>
+      </button>
+      <div class="confirmation-icon"><i data-lucide="check"></i></div>
+      <p class="eyebrow">Prenotazione ricevuta</p>
+      <h2>A presto al Paradiso</h2>
+      <p id="confirmation-copy"></p>
+      <strong class="confirmation-code" id="confirmation-code"></strong>
+      <button class="button primary dialog-done" type="button">Fatto</button>
+    </dialog>
+  </body>
+</html>

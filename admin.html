@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0b111a" />
+    <title>Dashboard ordini | Paradiso</title>
+    <link rel="preconnect" href="https://unpkg.com" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="admin.css" />
+    <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+    <script src="admin.js" defer></script>
+  </head>
+  <body class="admin-body" data-theme="night">
+    <header class="admin-header">
+      <a class="brand" href="index.html" aria-label="Torna al sito Paradiso">
+        <span class="brand-mark">P</span>
+        <span class="brand-name">Paradiso</span>
+      </a>
+      <div class="admin-header-copy">
+        <strong>Dashboard</strong>
+        <span>Prenotazioni e ordini</span>
+      </div>
+      <a class="button outline" href="index.html">
+        <i data-lucide="arrow-left"></i>
+        <span>Torna al sito</span>
+      </a>
+    </header>
+
+    <main class="admin-main">
+      <section class="admin-title-row">
+        <div>
+          <p class="eyebrow">Area riservata</p>
+          <h1>Ordini e prenotazioni</h1>
+          <p>I dati inseriti dal sito sono disponibili su questo dispositivo.</p>
+        </div>
+        <div class="admin-actions">
+          <button class="button outline" id="export-orders" type="button">
+            <i data-lucide="download"></i>
+            <span>Esporta CSV</span>
+          </button>
+          <button class="icon-button danger-button" id="clear-orders" type="button" title="Elimina tutti gli ordini" aria-label="Elimina tutti gli ordini">
+            <i data-lucide="trash-2"></i>
+          </button>
+        </div>
+      </section>
+
+      <section class="stats-grid" aria-label="Riepilogo">
+        <article class="stat-card">
+          <div><span>Totale richieste</span><strong id="stat-total">0</strong></div>
+          <i data-lucide="clipboard-list"></i>
+        </article>
+        <article class="stat-card">
+          <div><span>Nuove</span><strong id="stat-new">0</strong></div>
+          <i data-lucide="bell"></i>
+        </article>
+        <article class="stat-card">
+          <div><span>Ospiti attesi</span><strong id="stat-guests">0</strong></div>
+          <i data-lucide="users"></i>
+        </article>
+        <article class="stat-card">
+          <div><span>Valore ordini</span><strong id="stat-revenue">€ 0,00</strong></div>
+          <i data-lucide="banknote"></i>
+        </article>
+      </section>
+
+      <section class="orders-panel">
+        <div class="orders-toolbar">
+          <label class="search-field">
+            <i data-lucide="search"></i>
+            <input id="order-search" type="search" placeholder="Cerca nome, telefono o codice" />
+          </label>
+          <label class="status-filter">
+            <span>Stato</span>
+            <select id="status-filter">
+              <option value="all">Tutti</option>
+              <option>Nuovo</option>
+              <option>Confermato</option>
+              <option>Completato</option>
+              <option>Annullato</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Codice</th>
+                <th>Cliente</th>
+                <th>Prenotazione</th>
+                <th>Ordine</th>
+                <th>Totale</th>
+                <th>Stato</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="orders-body"></tbody>
+          </table>
+          <div class="admin-empty" id="admin-empty">
+            <i data-lucide="inbox"></i>
+            <h2>Nessuna prenotazione</h2>
+            <p>Le nuove richieste compariranno qui.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <dialog class="order-dialog" id="order-dialog">
+      <button class="icon-button order-dialog-close" type="button" aria-label="Chiudi" title="Chiudi">
+        <i data-lucide="x"></i>
+      </button>
+      <div id="order-detail"></div>
+    </dialog>
+  </body>
+</html>
