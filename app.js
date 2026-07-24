@@ -26,10 +26,10 @@ const menus = {
     intro: "Colazioni curate e proposte semplici per la pausa pranzo.",
     heroCopy: "Il buongiorno ha il profumo del caffè.",
     heroLabel: "Scopri il menu",
-    heroImage: "assets/gallery/photos/IMG-20260721-WA0143.webp",
-    heroAlt: "Il banco colazioni del Paradiso Lounge Bar",
-    heroPosition: "center 48%",
-    heroPositionMobile: "52% center",
+    heroImage: "assets/gallery/photos/IMG-20260721-WA0222.webp",
+    heroAlt: "L'ingresso e il giardino del Paradiso Lounge Bar",
+    heroPosition: "center 53%",
+    heroPositionMobile: "58% center",
     categories: {
       colazione: {
         label: "Colazione",
@@ -83,10 +83,10 @@ const menus = {
     intro: "Cocktail, gin, birre e distillati per vivere il Paradiso dopo il tramonto.",
     heroCopy: "La sera comincia con il bicchiere giusto.",
     heroLabel: "Scopri la sera",
-    heroImage: "assets/gallery/photos/IMG-20260721-WA0177.webp",
-    heroAlt: "Il bancone serale illuminato del Paradiso Lounge Bar",
+    heroImage: "assets/gallery/photos/IMG-20260721-WA0220.webp",
+    heroAlt: "Il bancone serale del Paradiso Lounge Bar illuminato in blu",
     heroPosition: "center 52%",
-    heroPositionMobile: "center 54%",
+    heroPositionMobile: "48% center",
     categories: {
       cocktail: {
         label: "Cocktail",
