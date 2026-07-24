@@ -327,6 +327,129 @@ const cocktailFacts = {
   "Jäger Red Bull": "Le note erbacee e speziate incontrano una parte più vivace e frizzante.",
 };
 
+const nightDrinkDefaults = {
+  bottiglie: {
+    fact: "Il servizio bottiglia è pensato per il tavolo: ghiaccio e mixer si scelgono insieme al momento.",
+  },
+  gin: {
+    description: "Ingredienti: gin botanico, acqua tonica, ghiaccio cristallino e guarnizione selezionata.",
+    fact: "La guarnizione non è decorativa: viene scelta per far emergere le botaniche del gin.",
+  },
+  aperitivo: {
+    fact: "L'aperitivo rende al meglio ben freddo, con ghiaccio abbondante e una guarnizione fresca.",
+  },
+  birre: {
+    description: "Ingredienti: malto d'orzo, luppolo, acqua e lievito. Servita fredda al punto giusto.",
+    fact: "Il bicchiere freddo conserva più a lungo profumo e carbonazione.",
+  },
+  whisky: {
+    description: "Ingredienti: distillato selezionato, servito liscio o con ghiaccio su richiesta.",
+    fact: "Un cubo grande di ghiaccio si scioglie lentamente e non copre il carattere del distillato.",
+  },
+  amari: {
+    description: "Ingredienti: infusione di erbe, spezie e agrumi; servito liscio o con ghiaccio.",
+    fact: "La temperatura cambia il profilo: freddo per la freschezza, liscio per percepire tutte le note erbacee.",
+  },
+  grappe: {
+    description: "Ingredienti: distillato di vinacce selezionate; servito nel calice da degustazione.",
+    fact: "Il calice stretto concentra i profumi e rende il sorso più elegante.",
+  },
+};
+
+const nightDrinkProfiles = {
+  bottiglie: {
+    "Clase Azul": {
+      description: "Ingredienti e stile: tequila da agave blu, morbida e intensa, da condividere al tavolo.",
+      fact: "La bottiglia in ceramica è dipinta a mano: ogni pezzo ha piccole differenze che la rendono unica.",
+    },
+    "Shot Clase Azul": {
+      description: "Ingredienti e stile: tequila da agave blu, servita in shot da 30 cl come da listino.",
+      fact: "Un piccolo servizio pensato per assaggiare la stessa firma morbida della bottiglia completa.",
+    },
+    "Don Papa Baroko": {
+      description: "Ingredienti e stile: rum filippino da melassa di canna da zucchero, ricco e rotondo.",
+      fact: "Nel bicchiere emergono note di vaniglia, agrumi canditi e zucchero di canna.",
+    },
+    "Jack Daniel's": {
+      description: "Ingredienti e stile: Tennessee whiskey di cereali, filtrato al carbone e dal finale vanigliato.",
+      fact: "La filtrazione al carbone di acero è il dettaglio che definisce il suo stile Tennessee.",
+    },
+    "Grey Goose": {
+      description: "Ingredienti e stile: vodka francese di grano, pulita e setosa al palato.",
+      fact: "Una vodka molto fredda acquista una consistenza più vellutata, perfetta per il servizio al tavolo.",
+    },
+    Belvedere: {
+      description: "Ingredienti e stile: vodka polacca di segale, cremosa e leggermente speziata.",
+      fact: "La segale le lascia un profilo più strutturato rispetto a molte vodka di grano.",
+    },
+    "Veuve Clicquot Brut": {
+      description: "Ingredienti e stile: champagne brut da uve Chardonnay, Pinot Noir e Meunier.",
+      fact: "La firma della maison è una struttura piena, pensata per restare elegante anche a tavola.",
+    },
+    "Moët Impérial Brut": {
+      description: "Ingredienti e stile: champagne brut da Chardonnay, Pinot Noir e Meunier, fresco e cremoso.",
+      fact: "La sua cuvée unisce numerosi cru per mantenere uno stile riconoscibile anno dopo anno.",
+    },
+  },
+  gin: {
+    Aviation: { fact: "Le sue botaniche floreali, soprattutto lavanda e salsapariglia, lo rendono morbido e profumato." },
+    Bombay: { fact: "Le botaniche vengono vaporizzate nel distillato: un metodo che mantiene il profilo molto nitido." },
+    Brockmans: { fact: "Le note di frutti rossi lo rendono un gin tonic più morbido e contemporaneo." },
+    "Gin Mare": { fact: "Rosmarino, timo e oliva richiamano il Mediterraneo in ogni sorso." },
+    "Hendrick's": { fact: "Cetriolo e rosa sono la sua firma: un abbinamento insolito che lo rende subito riconoscibile." },
+    "Hendrick's Viola": { fact: "La nota floreale di viola porta il gin tonic verso un profilo più aromatico e delicato." },
+    "Hendrick's Amazonia": { fact: "Un'edizione dal carattere tropicale, pensata per un gin tonic più esotico." },
+    Malfy: { fact: "Gli agrumi italiani sono il dettaglio che rende il suo profilo immediato e luminoso." },
+    Monkey: { fact: "Monkey 47 usa una ricetta molto ricca di botaniche: per questo merita una tonica poco invasiva." },
+    "Nordes": { fact: "Il suo stile atlantico e floreale si sposa bene con una tonica asciutta e una guarnizione delicata." },
+    Portofino: { fact: "Le botaniche mediterranee richiamano il profumo della costa ligure." },
+    Tanqueray: { fact: "Il ginepro resta protagonista: una scelta classica per chi ama un gin tonic secco e lineare." },
+  },
+  aperitivo: {
+    "Bitter pompelmo": {
+      description: "Ingredienti: bitter analcolico, pompelmo e ghiaccio. Fresco, agrumato e piacevolmente amaricante.",
+      fact: "Il pompelmo lascia un finale asciutto che prepara bene il palato all'aperitivo.",
+    },
+    "Campari con bianco": {
+      description: "Ingredienti: Campari, vino bianco e ghiaccio; un aperitivo morbido con finale amaricante.",
+      fact: "La parte vinosa arrotonda il bitter e cambia il ritmo del classico Campari.",
+    },
+    "Campari Soda": {
+      description: "Ingredienti: bitter Campari, soda e ghiaccio. Essenziale, secco e agrumato.",
+      fact: "La sua ricetta è rimasta un'icona dell'aperitivo italiano per oltre un secolo.",
+    },
+    Crodino: {
+      description: "Ingredienti: estratti di agrumi, erbe e spezie, serviti freddi con ghiaccio e arancia.",
+      fact: "È l'alternativa analcolica ideale quando vuoi tutto il rito dell'aperitivo senza alcol.",
+    },
+    "Offerta Spritz": {
+      description: "Ingredienti: bitter, prosecco, soda, ghiaccio e fetta d'arancia.",
+      fact: "Il segreto e l'equilibrio: abbastanza bollicine per restare leggero, abbastanza bitter per farsi ricordare.",
+    },
+  },
+  whisky: {
+    "Chivas 12": { fact: "Un blended Scotch con almeno dodici anni di affinamento: morbido, mielato e rotondo." },
+    Cognac: { description: "Ingredienti: distillato di vino affinato in legno, servito liscio o con ghiaccio.", fact: "Il calore della mano apre lentamente i profumi di frutta secca e spezie." },
+    "Jack Daniel's": { fact: "Il suo passaggio nel carbone di acero addolcisce il profilo prima dell'affinamento in botte." },
+    Laphroaig: { fact: "Le note affumicate e marine sono la sua firma: un whisky da sorseggiare con calma." },
+  },
+  amari: {
+    "Amaro del Capo": { fact: "Servito molto freddo, mette in primo piano le note balsamiche e agrumate." },
+    Averna: { fact: "Un amaro siciliano morbido, dove arancia e liquirizia danno un finale avvolgente." },
+    Baileys: { description: "Ingredienti: crema di latte e whiskey irlandese, morbido e vellutato.", fact: "È perfetto servito freddo: la parte cremosa risulta più compatta e golosa." },
+    "Branca Menta": { fact: "Menta e spezie lo rendono uno dei finali piu freschi della carta." },
+    "Fernet Branca": { fact: "La sua complessita erbacea e intensa: un grande classico del dopo cena milanese." },
+    Limoncello: { fact: "Le scorze di limone sono il cuore del suo profumo: va gustato ben freddo." },
+    Montenegro: { fact: "Dolce, speziato e agrumato: un amaro morbido che resta elegante anche liscio." },
+    Sambuca: { fact: "L'anice e protagonista: con tre chicchi di caffe diventa il classico 'mosca'." },
+  },
+  grappe: {
+    "Grappa Amarone": { fact: "Le vinacce dell'Amarone le regalano un profilo piu ricco, vinoso e persistente." },
+    "Grappa Barricata": { fact: "Il passaggio in legno aggiunge note calde di vaniglia e spezie dolci." },
+    Rum: { description: "Ingredienti: distillato di canna da zucchero, servito liscio o con ghiaccio.", fact: "Il rum cambia moltissimo con l'origine: puo essere secco e vegetale oppure ricco di melassa e spezie." },
+  },
+};
+
 function resolvePhoto(reference) {
   if (typeof reference === "number") return galleryPhoto(reference);
   if (reference === "dom-perignon") return "assets/gallery/photos/IMG-20260703-WA0049.webp";
@@ -345,6 +468,28 @@ Object.entries(photoReferences).forEach(([theme, categories]) => {
 
 menus.night.categories.cocktail.items.forEach((product) => {
   product.fact = cocktailFacts[product.name];
+});
+
+function bottleDescription(product) {
+  const name = product.name.toLowerCase();
+  if (name.includes("gin")) return "Ingredienti e stile: distillato di ginepro e botaniche selezionate, da servire con tonica e ghiaccio.";
+  if (name.includes("vodka") || name.includes("goose") || name.includes("belvedere") || name.includes("keglevich")) return "Ingredienti e stile: vodka distillata, pulita e fresca, da accompagnare con il mixer preferito.";
+  if (name.includes("champagne") || name.includes("moet") || name.includes("moët") || name.includes("veuve") || name.includes("lanson") || name.includes("krug") || name.includes("cristal") || name.includes("dom perignon")) return "Ingredienti e stile: cuvée di uve a bacca bianca e nera, affinata sui lieviti per una bollicina elegante.";
+  if (name.includes("bellavista") || name.includes("berlucchi") || name.includes("monte rossa")) return "Ingredienti e stile: Franciacorta da uve selezionate, affinato sui lieviti e servito ben freddo.";
+  if (name.includes("valdo")) return "Ingredienti e stile: prosecco extra dry da uve Glera, fresco e floreale.";
+  if (name.includes("don papa")) return "Ingredienti e stile: rum da melassa di canna da zucchero, ricco e rotondo.";
+  if (name.includes("jack daniel")) return "Ingredienti e stile: Tennessee whiskey di cereali, filtrato al carbone e dal finale vanigliato.";
+  if (name.includes("clase azul")) return "Ingredienti e stile: tequila da agave blu, morbida e intensa, da condividere al tavolo.";
+  return `${product.description} Servita al tavolo con ghiaccio e mixer su richiesta.`;
+}
+
+Object.entries(nightDrinkDefaults).forEach(([categoryKey, defaults]) => {
+  menus.night.categories[categoryKey].items.forEach((product) => {
+    const profile = nightDrinkProfiles[categoryKey]?.[product.name] || {};
+    const description = profile.description || (categoryKey === "bottiglie" ? bottleDescription(product) : defaults.description);
+    product.description = description || product.description;
+    product.fact = profile.fact || defaults.fact;
+  });
 });
 
 let currentTheme = getInitialTheme();
