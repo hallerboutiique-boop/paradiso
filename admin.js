@@ -1,12 +1,56 @@
 const ORDER_KEY = "paradiso_orders_v1";
+const ADMIN_PASSWORD = "admin";
 const euro = new Intl.NumberFormat("it-IT", { style: "currency", currency: "EUR" });
-let orders = readOrders();
+let orders = [];
 
 const ordersBody = document.querySelector("#orders-body");
 const emptyState = document.querySelector("#admin-empty");
 const searchInput = document.querySelector("#order-search");
 const statusFilter = document.querySelector("#status-filter");
 const orderDialog = document.querySelector("#order-dialog");
+const loginView = document.querySelector("#admin-login");
+const loginForm = document.querySelector("#admin-login-form");
+const passwordInput = document.querySelector("#admin-password");
+const passwordToggle = document.querySelector("#admin-password-toggle");
+const loginError = document.querySelector("#admin-login-error");
+const adminHeader = document.querySelector("#admin-header");
+const adminMain = document.querySelector("#admin-main");
+
+function unlockAdmin() {
+  loginError.hidden = true;
+  passwordInput.removeAttribute("aria-invalid");
+  loginView.hidden = true;
+  adminHeader.hidden = false;
+  adminMain.hidden = false;
+  orders = readOrders();
+  render();
+  window.scrollTo({ top: 0, behavior: "auto" });
+  document.querySelector("#order-search").focus();
+}
+
+function lockAdmin() {
+  if (orderDialog.open) orderDialog.close();
+  orders = [];
+  ordersBody.innerHTML = "";
+  adminHeader.hidden = true;
+  adminMain.hidden = true;
+  loginView.hidden = false;
+  passwordInput.value = "";
+  passwordInput.type = "password";
+  passwordInput.removeAttribute("aria-invalid");
+  loginError.hidden = true;
+  updatePasswordToggle();
+  window.scrollTo({ top: 0, behavior: "auto" });
+  passwordInput.focus();
+}
+
+function updatePasswordToggle() {
+  const isVisible = passwordInput.type === "text";
+  passwordToggle.setAttribute("aria-label", isVisible ? "Nascondi password" : "Mostra password");
+  passwordToggle.setAttribute("title", isVisible ? "Nascondi password" : "Mostra password");
+  passwordToggle.innerHTML = `<i data-lucide="${isVisible ? "eye-off" : "eye"}"></i>`;
+  refreshIcons();
+}
 
 function readOrders() {
   try {
@@ -187,6 +231,26 @@ document.querySelector("#clear-orders").addEventListener("click", () => {
   render();
 });
 document.querySelector(".order-dialog-close").addEventListener("click", () => orderDialog.close());
+loginForm.addEventListener("submit", event => {
+  event.preventDefault();
+  if (passwordInput.value === ADMIN_PASSWORD) {
+    unlockAdmin();
+    return;
+  }
+  loginError.hidden = false;
+  passwordInput.setAttribute("aria-invalid", "true");
+  passwordInput.select();
+});
+passwordInput.addEventListener("input", () => {
+  loginError.hidden = true;
+  passwordInput.removeAttribute("aria-invalid");
+});
+passwordToggle.addEventListener("click", () => {
+  passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+  updatePasswordToggle();
+  passwordInput.focus();
+});
+document.querySelector("#lock-admin").addEventListener("click", lockAdmin);
 
-render();
+refreshIcons();
 window.addEventListener("load", refreshIcons);

@@ -6,13 +6,44 @@
     <meta name="theme-color" content="#0b111a" />
     <title>Dashboard ordini | Paradiso</title>
     <link rel="preconnect" href="https://unpkg.com" />
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="admin.css" />
+    <link rel="stylesheet" href="styles.css?v=20260724-9" />
+    <link rel="stylesheet" href="admin.css?v=20260724-1" />
     <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
-    <script src="admin.js" defer></script>
+    <script src="admin.js?v=20260724-1" defer></script>
   </head>
   <body class="admin-body" data-theme="night">
-    <header class="admin-header">
+    <main class="admin-login" id="admin-login">
+      <section class="admin-login-panel" aria-labelledby="admin-login-title">
+        <a class="brand admin-login-brand" href="index.html" aria-label="Torna al sito Paradiso">
+          <span class="brand-mark">P</span>
+          <span class="brand-name">Paradiso</span>
+        </a>
+        <div class="admin-login-icon"><i data-lucide="lock-keyhole"></i></div>
+        <p class="eyebrow">Area riservata</p>
+        <h1 id="admin-login-title">Accesso amministratore</h1>
+        <p>Inserisci la password per visualizzare prenotazioni e ordini.</p>
+        <form class="admin-login-form" id="admin-login-form">
+          <label for="admin-password">Password</label>
+          <div class="admin-password-field">
+            <input id="admin-password" name="password" type="password" autocomplete="current-password" required autofocus />
+            <button class="admin-password-toggle" id="admin-password-toggle" type="button" aria-label="Mostra password" title="Mostra password">
+              <i data-lucide="eye"></i>
+            </button>
+          </div>
+          <p class="admin-login-error" id="admin-login-error" role="alert" hidden>Password non corretta.</p>
+          <button class="button primary admin-login-submit" type="submit">
+            <span>Accedi</span>
+            <i data-lucide="arrow-right"></i>
+          </button>
+        </form>
+        <a class="admin-login-back" href="index.html">
+          <i data-lucide="arrow-left"></i>
+          <span>Torna al sito</span>
+        </a>
+      </section>
+    </main>
+
+    <header class="admin-header" id="admin-header" hidden>
       <a class="brand" href="index.html" aria-label="Torna al sito Paradiso">
         <span class="brand-mark">P</span>
         <span class="brand-name">Paradiso</span>
@@ -21,13 +52,18 @@
         <strong>Dashboard</strong>
         <span>Prenotazioni e ordini</span>
       </div>
-      <a class="button outline" href="index.html">
-        <i data-lucide="arrow-left"></i>
-        <span>Torna al sito</span>
-      </a>
+      <div class="admin-header-actions">
+        <button class="icon-button" id="lock-admin" type="button" aria-label="Blocca area admin" title="Blocca area admin">
+          <i data-lucide="lock-keyhole"></i>
+        </button>
+        <a class="button outline" href="index.html">
+          <i data-lucide="arrow-left"></i>
+          <span>Torna al sito</span>
+        </a>
+      </div>
     </header>
 
-    <main class="admin-main">
+    <main class="admin-main" id="admin-main" hidden>
       <section class="admin-title-row">
         <div>
           <p class="eyebrow">Area riservata</p>
