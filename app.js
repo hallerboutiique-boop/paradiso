@@ -184,10 +184,6 @@ const menus = {
           item("Tagliere premium", 13, "Selezione premium da condividere.", "lunch"),
         ],
       },
-      servizi: {
-        label: "Servizi feste",
-        items: partyServices,
-      },
       birre: {
         label: "Birre",
         items: [
@@ -232,6 +228,10 @@ const menus = {
           ["Castagner Riserva", 4], ["Grappa Amarone", 5], ["Grappa Barri", 5], ["Grappa Barricata", 4],
           ["Grappa Bianca", 3], ["Grappa Gialla", 3], ["Grappino", 3], ["Rum", 4],
         ].map(([name, price]) => item(name, price, "Servito nel calice da degustazione.", "gin")),
+      },
+      servizi: {
+        label: "Servizi feste",
+        items: partyServices,
       },
     },
   },
