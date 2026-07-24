@@ -10,10 +10,53 @@
     <meta name="theme-color" content="#f5fbff" />
     <title>Paradiso | Lounge Bar Nova Milanese</title>
     <link rel="preconnect" href="https://unpkg.com" />
-    <link rel="stylesheet" href="styles.css?v=20260725-11" />
+    <link rel="stylesheet" href="styles.css?v=20260725-12" />
     <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
     <script src="drink-profiles.js?v=20260725-1" defer></script>
     <script src="app.js?v=20260725-16" defer></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BarOrPub",
+        "name": "Paradiso Lounge Bar",
+        "url": "https://hallerboutiique-boop.github.io/paradiso/",
+        "telephone": "+39 327 059 7844",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Via A. Diaz, 4",
+          "postalCode": "20834",
+          "addressLocality": "Nova Milanese",
+          "addressRegion": "MB",
+          "addressCountry": "IT"
+        },
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday"],
+            "opens": "07:00",
+            "closes": "01:30"
+          },
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Friday", "Saturday"],
+            "opens": "07:00",
+            "closes": "02:00"
+          },
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": "Sunday",
+            "opens": "08:00",
+            "closes": "12:30"
+          },
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": "Sunday",
+            "opens": "17:00",
+            "closes": "01:30"
+          }
+        ]
+      }
+    </script>
   </head>
   <body data-theme="day">
     <header class="site-header" id="top">
@@ -228,6 +271,30 @@
             <i data-lucide="map-pin"></i>
             <span>Via A. Diaz, 4<br />20834 Nova Milanese MB</span>
           </a>
+        </div>
+        <div class="section-inner opening-hours" aria-labelledby="opening-hours-title">
+          <div class="opening-hours-title">
+            <i data-lucide="clock-3"></i>
+            <div>
+              <p class="eyebrow">Orari</p>
+              <h3 id="opening-hours-title">Quando siamo aperti</h3>
+            </div>
+          </div>
+          <dl class="opening-hours-list">
+            <div>
+              <dt>Lunedì – Giovedì</dt>
+              <dd>07:00 – 01:30</dd>
+            </div>
+            <div>
+              <dt>Venerdì – Sabato</dt>
+              <dd>07:00 – 02:00</dd>
+            </div>
+            <div>
+              <dt>Domenica</dt>
+              <dd><span>08:00 – 12:30</span><span>17:00 – 01:30</span></dd>
+            </div>
+          </dl>
+          <p class="opening-hours-note">Gli orari possono variare nei giorni festivi.</p>
         </div>
         <div class="map-wrap">
           <iframe

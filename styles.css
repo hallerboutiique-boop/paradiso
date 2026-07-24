@@ -1043,6 +1043,83 @@ textarea:focus {
   color: var(--accent);
 }
 
+.opening-hours {
+  display: grid;
+  grid-template-columns: minmax(210px, 0.75fr) minmax(520px, 1.6fr);
+  gap: 24px 54px;
+  align-items: start;
+  padding: 0 0 38px;
+}
+
+.opening-hours-title {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.opening-hours-title > svg {
+  width: 22px;
+  height: 22px;
+  margin-top: 4px;
+  color: var(--accent);
+}
+
+.opening-hours-title .eyebrow {
+  margin-bottom: 6px;
+}
+
+.opening-hours-title h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.opening-hours-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  margin: 0;
+  border-top: 1px solid var(--line);
+}
+
+.opening-hours-list > div {
+  min-width: 0;
+  padding: 16px 22px 4px;
+  border-left: 1px solid var(--line);
+}
+
+.opening-hours-list > div:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.opening-hours-list dt {
+  margin-bottom: 7px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.opening-hours-list dd {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.opening-hours-note {
+  grid-column: 2;
+  margin: -8px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+
 .map-wrap {
   height: min(520px, 58vw);
   min-height: 360px;
@@ -1590,6 +1667,30 @@ body[data-theme="night"] .map-wrap {
   .location-heading {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .opening-hours {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .opening-hours-note {
+    grid-column: 1;
+  }
+
+  .opening-hours-list {
+    grid-template-columns: 1fr;
+  }
+
+  .opening-hours-list > div,
+  .opening-hours-list > div:first-child {
+    padding: 14px 0;
+    border-left: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .opening-hours-list > div:last-child {
+    border-bottom: 0;
   }
 
   .theme-toggle.large {
