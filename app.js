@@ -238,10 +238,116 @@ const menus = {
   },
 };
 
+const galleryPhoto = (number) =>
+  `assets/gallery/photos/IMG-20260721-WA${String(number).padStart(4, "0")}.webp`;
+const generatedPhoto = (name) => `assets/images/generated/${name}.webp`;
+
+const photoReferences = {
+  day: {
+    colazione: [138, 154, 220, 172, 132, 37],
+    pranzo: [136, 136, "generated:insalatona", 120, 226],
+    bibite: [223, 225, 183, 37],
+    tessere: [138, 154, 132, 183, 154, 123],
+    servizi: [200, 185, "generated:pizza-compleanno", 69],
+  },
+  night: {
+    cocktail: [
+      "generated:boulevardier", 158, 49, "generated:cuba-libre", "generated:cuba-libre",
+      70, "generated:margarita", 221, 204, 117, 149, 98, 97, 71,
+      "generated:cuba-libre", "generated:boulevardier", "generated:cuba-libre", 29,
+      "generated:margarita", "generated:martini", "generated:espresso-martini", 158,
+      230, "generated:boulevardier", 202, 29, 204, 63, 110, 117, 49, 71,
+      202, 98, 230, 221, 228, 97, 221,
+    ],
+    bottiglie: [
+      73, 73, 181, 181, 142, 142, 216, 217, 212, 169, 169, 169, 168,
+      168, 168, 166, 167, 165, 165, 166, 167, 168, 170, 166, 165,
+      "dom-perignon", 168, 167, "dom-perignon",
+    ],
+    gin: [
+      216, 207, 208, 209, 210, 211, 212, 213, 214, 209, 210, 211, 212,
+      213, 214, 207, 215, 216, 217, 208, 209, 210, 211, 212, 213, 214,
+    ],
+    aperitivo: [202, 226, 117, 202, 223, 71, 119, 120, 226],
+    servizi: [200, 185, "generated:pizza-compleanno", 69],
+    birre: [224, 224, 224, 224, 14, 18, 224, 14, 18, 224, 14, 18, 224, 66],
+    whisky: ["generated:whisky"],
+    amari: ["generated:amaro"],
+    snack: [14, 18, 66],
+    grappe: ["generated:grappa"],
+  },
+};
+
+const cocktailFacts = {
+  Boulevardier: "È il cugino più caldo del Negroni: il bourbon prende il posto del gin.",
+  Caipiroska: "È la variante alla vodka della Caipirinha brasiliana.",
+  "Caipiroska alla fragola": "La fragola addolcisce il lime senza togliere freschezza.",
+  "Cuba Libre chiaro": "È il lime fresco a distinguerlo davvero da un semplice rum e cola.",
+  "Cuba Libre scuro": "Il rum scuro aggiunge note più rotonde di vaniglia e caramello.",
+  "Cuba Zombie": "Il gioco di rum e frutta tropicale lo rende intenso: meglio gustarlo lentamente.",
+  Daiquiri: "Tre soli ingredienti: quando sono in equilibrio non serve altro.",
+  "Disaronno Red Bull o Coca-Cola": "Le note di mandorla del Disaronno diventano più vivaci con una miscela frizzante.",
+  "Disaronno Sour": "L'acidità del limone mette in risalto il lato tostato dell'amaretto.",
+  "Disaronno Tè": "Il tè alleggerisce la dolcezza e lascia un finale aromatico.",
+  "Drink premium": "Distillato, ghiaccio e guarnizione vengono scelti per costruire un servizio su misura.",
+  "Gin Lemon Base": "Una scorza di limone espressa sul bicchiere libera gli oli più profumati.",
+  "Gin Tonic Base": "Tanto ghiaccio scioglie più lentamente e mantiene il drink brillante.",
+  Hugo: "È un aperitivo di ispirazione alpina, floreale e molto fresco.",
+  "Jack Red Bull o Coca-Cola": "Le note vanigliate del whiskey si legano bene alla parte caramellata della cola.",
+  Japanese: "Il nome è storico, mentre il profilo resta morbido, secco e molto aromatico.",
+  "Long Island": "Non contiene tè: è il colore finale a ricordare un tè freddo.",
+  "Malibu Sambuca": "Cocco e anice creano un contrasto insolito, dolce e balsamico.",
+  Margarita: "Il bordo salato esalta lime e agave a ogni sorso.",
+  Martini: "Più è freddo, più la texture risulta pulita e setosa.",
+  "Espresso Martini": "L'espresso appena fatto crea la caratteristica crema in superficie.",
+  Mojito: "La menta va accarezzata, non triturata, per evitare note amare.",
+  "Moscow Mule": "La tazza in rame aiuta a mantenerlo freddo più a lungo.",
+  Negroni: "La ricetta classica gioca sull'equilibrio di tre ingredienti in parti uguali.",
+  Paloma: "Il pompelmo regala una freschezza più sapida e asciutta del classico lime.",
+  "Piña Colada": "Ananas e cocco funzionano quando la dolcezza resta bilanciata dalla parte fresca.",
+  "Pornstar Martini": "Il frutto della passione porta profumo, acidità e un colore inconfondibile.",
+  "Sambuca Vodka": "Unisce la pulizia della vodka al carattere deciso dell'anice.",
+  Sangria: "Il riposo permette a vino, frutta e spezie di fondersi meglio.",
+  Sbagliato: "Nato a Milano da un errore fortunato: le bollicine sostituirono il gin.",
+  "Sex on the Beach": "Pesca e frutti rossi lo rendono morbido, mentre l'arancia lo mantiene fresco.",
+  "Spritz Aperol": "Le bollicine vanno versate con delicatezza per conservarne la vivacità.",
+  "Spritz Campari": "Più amaricante e deciso, con un finale agrumato.",
+  "Vodka Lemon Base": "La neutralità della vodka lascia spazio alla parte agrumata.",
+  "Vodka Premium": "Una vodka ben fredda acquista una consistenza più morbida e vellutata.",
+  "Vodka Red Bull": "Un highball diretto, servito molto freddo per mantenerlo netto.",
+  "Vodka Sour": "Il contrasto tra limone e zucchero crea una freschezza pulita.",
+  "Vodka Tonic Base": "La tonica asciuga il sorso e una scorza agrumata completa il profumo.",
+  "Jäger Red Bull": "Le note erbacee e speziate incontrano una parte più vivace e frizzante.",
+};
+
+function resolvePhoto(reference) {
+  if (typeof reference === "number") return galleryPhoto(reference);
+  if (reference === "dom-perignon") return "assets/gallery/photos/IMG-20260703-WA0049.webp";
+  if (reference.startsWith("generated:")) return generatedPhoto(reference.split(":")[1]);
+  return reference;
+}
+
+Object.entries(photoReferences).forEach(([theme, categories]) => {
+  Object.entries(categories).forEach(([categoryKey, references]) => {
+    menus[theme].categories[categoryKey].items.forEach((product, index) => {
+      product.image = resolvePhoto(references[index % references.length]);
+      delete product.imageFit;
+    });
+  });
+});
+
+menus.night.categories.cocktail.items.forEach((product) => {
+  product.fact = cocktailFacts[product.name];
+});
+
 let currentTheme = getInitialTheme();
 let activeCategory = Object.keys(menus[currentTheme].categories)[0];
 let showAll = false;
-let cart = readStorage(CART_KEY, []);
+let cart = readStorage(CART_KEY, []).map((entry) => ({
+  ...entry,
+  ...findProduct(entry.id),
+  quantity: entry.quantity,
+}));
 
 const menuGrid = document.querySelector("#menu-grid");
 const categoryTabs = document.querySelector("#category-tabs");
@@ -250,6 +356,7 @@ const cartDrawer = document.querySelector("#cart-drawer");
 const drawerBackdrop = document.querySelector("#drawer-backdrop");
 const bookingForm = document.querySelector("#booking-form");
 const confirmationDialog = document.querySelector("#confirmation-dialog");
+const productDialog = document.querySelector("#product-dialog");
 
 function readStorage(key, fallback) {
   try {
@@ -319,9 +426,16 @@ function renderMenu() {
       const id = itemId(currentTheme, activeCategory, product.name);
       return `
         <article class="menu-card">
-          <div class="menu-card-media">
+          <button
+            class="menu-card-media"
+            type="button"
+            data-preview-item="${id}"
+            aria-label="Ingrandisci ${product.name}"
+            title="Ingrandisci"
+          >
             <img class="${product.imageFit === "contain" ? "contain" : ""}" src="${product.image}" alt="${product.name}" loading="lazy" />
-          </div>
+            <span class="menu-card-zoom"><i data-lucide="maximize-2"></i></span>
+          </button>
           <div class="menu-card-content">
             <div class="menu-card-top">
               <h3>${product.name}</h3>
@@ -358,6 +472,25 @@ function findProduct(id) {
     }
   }
   return null;
+}
+
+function openProductPreview(id) {
+  const product = findProduct(id);
+  if (!product) return;
+
+  const category = menus[product.theme].categories[product.category];
+  const factBox = productDialog.querySelector("#product-dialog-fact");
+  productDialog.querySelector("#product-dialog-image").src = product.image;
+  productDialog.querySelector("#product-dialog-image").alt = product.name;
+  productDialog.querySelector("#product-dialog-category").textContent = category.label;
+  productDialog.querySelector("#product-dialog-title").textContent = product.name;
+  productDialog.querySelector("#product-dialog-description").textContent = product.description;
+  productDialog.querySelector("#product-dialog-price").textContent = euro.format(product.price);
+  productDialog.querySelector("#product-dialog-fact-copy").textContent = product.fact || "";
+  factBox.hidden = !product.fact;
+  productDialog.querySelector("#product-dialog-add").dataset.addItem = id;
+  productDialog.showModal();
+  refreshIcons();
 }
 
 function addToCart(id) {
@@ -549,8 +682,14 @@ categoryTabs.addEventListener("click", (event) => {
 });
 
 menuGrid.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-add-item]");
-  if (button) addToCart(button.dataset.addItem);
+  const addButton = event.target.closest("[data-add-item]");
+  if (addButton) {
+    addToCart(addButton.dataset.addItem);
+    return;
+  }
+
+  const previewButton = event.target.closest("[data-preview-item]");
+  if (previewButton) openProductPreview(previewButton.dataset.previewItem);
 });
 
 showMoreButton.addEventListener("click", () => {
@@ -582,6 +721,20 @@ document.querySelector("#checkout-button").addEventListener("click", () => {
 bookingForm.addEventListener("submit", submitBooking);
 document.querySelector(".dialog-close").addEventListener("click", () => confirmationDialog.close());
 document.querySelector(".dialog-done").addEventListener("click", () => confirmationDialog.close());
+document.querySelector(".product-dialog-close").addEventListener("click", () => productDialog.close());
+document.querySelector("#product-dialog-add").addEventListener("click", (event) => {
+  addToCart(event.currentTarget.dataset.addItem);
+});
+productDialog.addEventListener("click", (event) => {
+  if (event.target !== productDialog) return;
+  const bounds = productDialog.getBoundingClientRect();
+  const isInside =
+    event.clientX >= bounds.left &&
+    event.clientX <= bounds.right &&
+    event.clientY >= bounds.top &&
+    event.clientY <= bounds.bottom;
+  if (!isInside) productDialog.close();
+});
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && cartDrawer.classList.contains("is-open")) closeCart();
 });

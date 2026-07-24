@@ -10,9 +10,9 @@
     <meta name="theme-color" content="#f5fbff" />
     <title>Paradiso | Lounge Bar Nova Milanese</title>
     <link rel="preconnect" href="https://unpkg.com" />
-    <link rel="stylesheet" href="styles.css?v=20260724-7" />
+    <link rel="stylesheet" href="styles.css?v=20260724-9" />
     <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
-    <script src="app.js" defer></script>
+    <script src="app.js?v=20260724-9" defer></script>
   </head>
   <body data-theme="day">
     <header class="site-header" id="top">
@@ -271,6 +271,34 @@
         <small>Pagamento in contanti o con carta al locale</small>
       </div>
     </aside>
+
+    <dialog class="product-dialog" id="product-dialog" aria-labelledby="product-dialog-title">
+      <button class="icon-button product-dialog-close" type="button" aria-label="Chiudi" title="Chiudi">
+        <i data-lucide="x"></i>
+      </button>
+      <div class="product-dialog-layout">
+        <div class="product-dialog-media">
+          <img id="product-dialog-image" src="" alt="" />
+        </div>
+        <div class="product-dialog-content">
+          <p class="eyebrow" id="product-dialog-category"></p>
+          <h2 id="product-dialog-title"></h2>
+          <strong class="product-dialog-price" id="product-dialog-price"></strong>
+          <p class="product-dialog-description" id="product-dialog-description"></p>
+          <div class="product-dialog-fact" id="product-dialog-fact" hidden>
+            <i data-lucide="sparkles"></i>
+            <div>
+              <strong>Chicca</strong>
+              <p id="product-dialog-fact-copy"></p>
+            </div>
+          </div>
+          <button class="button primary product-dialog-add" id="product-dialog-add" type="button">
+            <i data-lucide="plus"></i>
+            <span>Aggiungi al carrello</span>
+          </button>
+        </div>
+      </div>
+    </dialog>
 
     <dialog class="confirmation-dialog" id="confirmation-dialog">
       <button class="icon-button dialog-close" type="button" aria-label="Chiudi" title="Chiudi">
