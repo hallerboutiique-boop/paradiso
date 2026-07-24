@@ -224,11 +224,23 @@ const menus = {
       snack: {
         label: "Snack",
         items: [
-          ["Bueno", 2], ["Caramelle singole", 0.2], ["Chupa Chups", 0.5], ["Cicche pacchetto", 2.5],
-          ["Cicche singole", 1.2], ["Ciuccio", 2], ["Frisk", 1], ["Goleador", 0.2],
-          ["Golia", 2.5], ["Golia Immuno", 5], ["Mentos", 1.8], ["Patatine grandi", 2.5],
-          ["Patatine piccole", 1.8], ["Patatine San Carlo", 1.5], ["Pringles", 3], ["Trinketto", 2],
-        ].map(([name, price]) => item(name, price, "Disponibile al banco.", "lunch")),
+          item("Bueno", 2, "Wafer croccante ripieno di crema alla nocciola e ricoperto di cioccolato.", "lunch"),
+          item("Caramelle singole", 0.2, "Caramelle assortite vendute singolarmente; gusti disponibili al banco.", "lunch"),
+          item("Chupa Chups", 0.5, "Lecca-lecca alla frutta o alla cola; scegli il gusto disponibile.", "lunch"),
+          item("Cicche pacchetto", 2.5, "Confezione di gomme da masticare; marca e gusto secondo disponibilità.", "lunch"),
+          item("Cicche singole", 1.2, "Gomme da masticare vendute singolarmente, in gusti assortiti.", "lunch"),
+          item("Ciuccio", 2, "Caramella gommosa a forma di ciuccio, dolce o frizzante secondo disponibilità.", "lunch"),
+          item("Frisk", 1, "Piccole mentine pressate dal gusto fresco e intenso.", "lunch"),
+          item("Goleador", 0.2, "Caramella morbida e fruttata venduta singolarmente.", "lunch"),
+          item("Golia", 2.5, "Pastiglie balsamiche alla liquirizia, disponibili nella confezione del giorno.", "lunch"),
+          item("Golia Immuno", 5, "Caramelle gommose con vitamine e ingredienti funzionali, nella variante disponibile.", "lunch"),
+          item("Mentos", 1.8, "Confetti gommosi in rotolo; gusto menta o frutta secondo disponibilità.", "lunch"),
+          item("Patatine grandi", 2.5, "Confezione grande di patatine croccanti; gusto disponibile al banco.", "lunch"),
+          item("Patatine piccole", 1.8, "Confezione piccola di patatine, ideale per uno spuntino veloce.", "lunch"),
+          item("Patatine San Carlo", 1.5, "Patatine San Carlo in confezione monoporzione; variante secondo disponibilità.", "lunch"),
+          item("Pringles", 3, "Patatine impilate dalla forma curva, in gusto disponibile al banco.", "lunch"),
+          item("Trinketto", 2, "Caramella liquida alla frutta nel caratteristico flaconcino.", "lunch"),
+        ],
       },
       grappe: {
         label: "Grappe e rum",
@@ -330,7 +342,24 @@ const photoReferences = {
       "assets/images/night-drinks/amari/vecchia-romagna.webp",
       "assets/images/night-drinks/amari/vodka.webp",
     ],
-    snack: [129, 129, 129, 129, 129, 129, 129, 129, 129, 129, 129, 14, 14, 14, 14, 14],
+    snack: [
+      "assets/images/generated/snacks/wafer-nocciola.jpg",
+      129,
+      129,
+      "assets/images/generated/snacks/gomme-mentine.jpg",
+      "assets/images/generated/snacks/gomme-mentine.jpg",
+      129,
+      "assets/images/generated/snacks/gomme-mentine.jpg",
+      129,
+      "assets/images/generated/snacks/liquirizie.jpg",
+      "assets/images/generated/snacks/caramella-liquida.jpg",
+      "assets/images/generated/snacks/gomme-mentine.jpg",
+      14,
+      14,
+      14,
+      "assets/images/generated/snacks/patatine-impilate.jpg",
+      "assets/images/generated/snacks/caramella-liquida.jpg",
+    ],
     grappe: [
       "assets/images/night-drinks/grappe/castagner-riserva.webp",
       "assets/images/night-drinks/grappe/grappa-amarone.webp",
@@ -386,6 +415,25 @@ const cocktailFacts = {
   "Jäger Red Bull": "Jägermeister contiene 56 botaniche: la Red Bull allunga il liquore senza nasconderne il carattere erbaceo.",
 };
 
+const snackFacts = {
+  Bueno: "Il contrasto è tutto: cialda leggera, crema alla nocciola e copertura al cioccolato nello stesso morso.",
+  "Caramelle singole": "La selezione cambia nel tempo: chiedi al banco i gusti presenti prima di aggiungerle all'ordine.",
+  "Chupa Chups": "Il marchio nasce in Spagna nel 1958; il celebre logo fu ridisegnato da Salvador Dalí.",
+  "Cicche pacchetto": "La confezione mantiene le gomme protette e permette di conservarne più a lungo aroma e consistenza.",
+  "Cicche singole": "Una scelta rapida quando vuoi una sola gomma senza acquistare l'intero pacchetto.",
+  Ciuccio: "La forma giocosa rende questa caramella immediatamente riconoscibile nel banco dolci.",
+  Frisk: "Le mentine pressate si sciolgono lentamente e liberano un gusto più concentrato rispetto a una gomma.",
+  Goleador: "Il piccolo formato e la consistenza morbida ne fanno una delle caramelle da banco italiane più riconoscibili.",
+  Golia: "Liquirizia e note balsamiche costruiscono un gusto più intenso delle comuni caramelle alla frutta.",
+  "Golia Immuno": "La composizione varia in base alla referenza: ingredienti e dose consigliata vanno sempre letti sulla confezione.",
+  Mentos: "La superficie croccante protegge un interno gommoso, creando la doppia consistenza tipica del confetto.",
+  "Patatine grandi": "Il formato grande è pensato per essere condiviso al tavolo durante l'aperitivo.",
+  "Patatine piccole": "La monoporzione aiuta a conservare croccantezza e profumo fino all'apertura.",
+  "Patatine San Carlo": "Il gusto effettivamente disponibile può cambiare: la confezione viene confermata al momento dell'ordine.",
+  Pringles: "La forma a sella permette alle patatine di impilarsi ordinatamente e rompersi meno nella confezione.",
+  Trinketto: "Si gusta direttamente dal flaconcino: è una caramella liquida, non una bibita.",
+};
+
 const nightDrinkProfiles = window.nightDrinkProfiles;
 
 function resolvePhoto(reference) {
@@ -406,6 +454,10 @@ Object.entries(photoReferences).forEach(([theme, categories]) => {
 
 menus.night.categories.cocktail.items.forEach((product) => {
   product.fact = cocktailFacts[product.name];
+});
+
+menus.night.categories.snack.items.forEach((product) => {
+  product.fact = snackFacts[product.name];
 });
 
 const detailedDrinkCategories = ["bottiglie", "gin", "aperitivo", "birre", "whisky", "amari", "grappe"];
