@@ -64,7 +64,7 @@ const galleryVideos = Array.from({ length: 108 }, (_, index) => index + 231)
     id: `video-${id}`,
     type: "video",
     theme: galleryThemeFor(id, "video"),
-    src: `assets/gallery/videos/VID-20260721-WA${padGalleryId(id)}.m4v`,
+    src: `assets/gallery/videos/VID-20260721-WA${padGalleryId(id)}.mp4`,
     poster: `assets/gallery/posters/VID-20260721-WA${padGalleryId(id)}.webp`,
   }));
 
