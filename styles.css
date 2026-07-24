@@ -272,7 +272,7 @@ button {
 
 .hero > img {
   object-fit: cover;
-  object-position: center 52%;
+  object-position: var(--hero-position, center 52%);
   filter: var(--hero-filter);
   transform: scale(1.01);
   transition: filter 500ms ease;
@@ -1540,7 +1540,7 @@ body[data-theme="night"] .map-wrap {
   }
 
   .hero > img {
-    object-position: 66% center;
+    object-position: var(--hero-position-mobile, 66% center);
   }
 
   .hero-content {

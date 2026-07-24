@@ -10,9 +10,9 @@
     <meta name="theme-color" content="#f5fbff" />
     <title>Paradiso | Lounge Bar Nova Milanese</title>
     <link rel="preconnect" href="https://unpkg.com" />
-    <link rel="stylesheet" href="styles.css?v=20260724-10" />
+    <link rel="stylesheet" href="styles.css?v=20260725-11" />
     <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
-    <script src="app.js?v=20260725-14" defer></script>
+    <script src="app.js?v=20260725-15" defer></script>
   </head>
   <body data-theme="day">
     <header class="site-header" id="top">
@@ -62,7 +62,13 @@
 
     <main>
       <section class="hero" aria-labelledby="hero-title">
-        <img src="assets/images/hero.jpg" alt="Il bancone elegante del Paradiso Lounge Bar" />
+        <img
+          id="hero-image"
+          src="assets/gallery/photos/IMG-20260721-WA0143.webp"
+          alt="Il banco colazioni del Paradiso Lounge Bar"
+          fetchpriority="high"
+          decoding="async"
+        />
         <div class="hero-overlay"></div>
         <div class="hero-content">
           <p class="eyebrow" id="hero-eyebrow">Lounge bar · Nova Milanese</p>

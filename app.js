@@ -26,6 +26,10 @@ const menus = {
     intro: "Colazioni curate e proposte semplici per la pausa pranzo.",
     heroCopy: "Il buongiorno ha il profumo del caffè.",
     heroLabel: "Scopri il menu",
+    heroImage: "assets/gallery/photos/IMG-20260721-WA0143.webp",
+    heroAlt: "Il banco colazioni del Paradiso Lounge Bar",
+    heroPosition: "center 48%",
+    heroPositionMobile: "52% center",
     categories: {
       colazione: {
         label: "Colazione",
@@ -79,6 +83,10 @@ const menus = {
     intro: "Cocktail, gin, birre e distillati per vivere il Paradiso dopo il tramonto.",
     heroCopy: "La sera comincia con il bicchiere giusto.",
     heroLabel: "Scopri la sera",
+    heroImage: "assets/gallery/photos/IMG-20260721-WA0177.webp",
+    heroAlt: "Il bancone serale illuminato del Paradiso Lounge Bar",
+    heroPosition: "center 52%",
+    heroPositionMobile: "center 54%",
     categories: {
       cocktail: {
         label: "Cocktail",
@@ -601,6 +609,11 @@ function setTheme(theme) {
   document.querySelector("#menu-intro").textContent = menu.intro;
   document.querySelector("#hero-copy").textContent = menu.heroCopy;
   document.querySelector("#hero-menu-label").textContent = menu.heroLabel;
+  const heroImage = document.querySelector("#hero-image");
+  heroImage.src = menu.heroImage;
+  heroImage.alt = menu.heroAlt;
+  heroImage.style.setProperty("--hero-position", menu.heroPosition);
+  heroImage.style.setProperty("--hero-position-mobile", menu.heroPositionMobile);
   renderTabs();
   renderMenu();
   refreshIcons();
