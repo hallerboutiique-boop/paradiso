@@ -10,10 +10,9 @@
     <meta name="theme-color" content="#f5fbff" />
     <title>Paradiso | Lounge Bar Nova Milanese</title>
     <link rel="preconnect" href="https://unpkg.com" />
-    <link rel="stylesheet" href="styles.css?v=20260724-6" />
+    <link rel="stylesheet" href="styles.css?v=20260724-7" />
     <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
     <script src="app.js" defer></script>
-    <script src="gallery.js?v=20260724-6" defer></script>
   </head>
   <body data-theme="day">
     <header class="site-header" id="top">
@@ -24,13 +23,13 @@
 
       <nav class="main-nav" aria-label="Navigazione principale">
         <a href="#menu">Menu</a>
-        <a href="#galleria">Galleria</a>
         <a href="#prenota">Prenota</a>
         <a href="#dove-siamo">Dove siamo</a>
+        <a href="galleria.html">Galleria</a>
       </nav>
 
       <div class="header-actions">
-        <a class="icon-button gallery-header-link" href="#galleria" aria-label="Apri la galleria">
+        <a class="icon-button gallery-header-link" href="galleria.html" aria-label="Apri la galleria">
           <i data-lucide="images"></i>
         </a>
 
@@ -126,35 +125,6 @@
           <div class="service-item">
             <i data-lucide="banknote"></i>
             <div><strong>Pagamento</strong><span>Contanti o carta al locale</span></div>
-          </div>
-        </div>
-      </section>
-
-      <section class="gallery-section section" id="galleria" aria-labelledby="gallery-title">
-        <div class="section-inner">
-          <div class="section-heading gallery-heading">
-            <div>
-              <p class="eyebrow">Momenti al Paradiso</p>
-              <h2 id="gallery-title">Galleria</h2>
-              <p>Dal primo caffè alle serate da ricordare.</p>
-            </div>
-            <p class="gallery-count" id="gallery-count" aria-live="polite"></p>
-          </div>
-
-          <div class="gallery-filters" id="gallery-filters" role="tablist" aria-label="Temi della galleria">
-            <button type="button" role="tab" data-gallery-filter="all" aria-selected="true">Tutto</button>
-            <button type="button" role="tab" data-gallery-filter="locale" aria-selected="false">Il locale</button>
-            <button type="button" role="tab" data-gallery-filter="food" aria-selected="false">Colazioni &amp; food</button>
-            <button type="button" role="tab" data-gallery-filter="drinks" aria-selected="false">Drink &amp; bottiglie</button>
-            <button type="button" role="tab" data-gallery-filter="events" aria-selected="false">Feste &amp; serate</button>
-          </div>
-
-          <div class="gallery-grid" id="gallery-grid"></div>
-          <div class="gallery-more-wrap">
-            <button class="button outline" id="gallery-more" type="button">
-              <span>Mostra altri</span>
-              <i data-lucide="chevrons-down"></i>
-            </button>
           </div>
         </div>
       </section>
@@ -270,7 +240,7 @@
           <div><strong>Paradiso</strong><span>Lounge Bar · Nova Milanese</span></div>
         </div>
         <div class="footer-links">
-          <a href="#galleria"><i data-lucide="images"></i> Galleria</a>
+          <a href="galleria.html"><i data-lucide="images"></i> Galleria</a>
           <a href="https://www.instagram.com/lounge_bar__paradiso/?hl=fr" target="_blank" rel="noreferrer">
             <i data-lucide="instagram"></i> Instagram
           </a>
@@ -314,20 +284,5 @@
       <button class="button primary dialog-done" type="button">Fatto</button>
     </dialog>
 
-    <dialog class="gallery-dialog" id="gallery-dialog" aria-label="Galleria Paradiso">
-      <button class="icon-button gallery-dialog-close" type="button" aria-label="Chiudi galleria" title="Chiudi">
-        <i data-lucide="x"></i>
-      </button>
-      <div class="gallery-dialog-media" id="gallery-dialog-media"></div>
-      <div class="gallery-dialog-controls">
-        <button class="icon-button" id="gallery-previous" type="button" aria-label="Precedente" title="Precedente">
-          <i data-lucide="chevron-left"></i>
-        </button>
-        <span id="gallery-position"></span>
-        <button class="icon-button" id="gallery-next" type="button" aria-label="Successivo" title="Successivo">
-          <i data-lucide="chevron-right"></i>
-        </button>
-      </div>
-    </dialog>
   </body>
 </html>

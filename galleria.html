@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="La galleria del Paradiso Lounge Bar: locale, colazioni, drink, bottiglie, feste e serate."
+    />
+    <meta name="theme-color" content="#f5fbff" />
+    <title>Galleria | Paradiso Lounge Bar</title>
+    <link rel="preconnect" href="https://unpkg.com" />
+    <link rel="stylesheet" href="styles.css?v=20260724-7" />
+    <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+    <script src="gallery-page.js?v=20260724-1" defer></script>
+    <script src="gallery.js?v=20260724-7" defer></script>
+  </head>
+  <body data-theme="day">
+    <header class="site-header" id="top">
+      <a class="brand" href="index.html" aria-label="Torna alla homepage del Paradiso">
+        <span class="brand-mark">P</span>
+        <span class="brand-name">Paradiso</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Navigazione principale">
+        <a href="index.html#menu">Menu</a>
+        <a href="index.html#prenota">Prenota</a>
+        <a href="index.html#dove-siamo">Dove siamo</a>
+        <a href="galleria.html" aria-current="page">Galleria</a>
+      </nav>
+
+      <div class="header-actions">
+        <a class="icon-button gallery-header-link" href="index.html" aria-label="Torna alla homepage">
+          <i data-lucide="house"></i>
+        </a>
+
+        <a
+          class="icon-button instagram-link"
+          href="https://www.instagram.com/lounge_bar__paradiso/?hl=fr"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Apri Instagram"
+          title="Instagram"
+        >
+          <i data-lucide="instagram"></i>
+        </a>
+
+        <div class="theme-toggle compact" role="group" aria-label="Cambia versione del sito">
+          <button type="button" data-set-theme="day" aria-label="Versione giorno" title="Giorno">
+            <i data-lucide="sun"></i>
+          </button>
+          <button type="button" data-set-theme="night" aria-label="Versione notte" title="Notte">
+            <i data-lucide="moon"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="gallery-page">
+      <section class="gallery-section section" aria-labelledby="gallery-title">
+        <div class="section-inner">
+          <div class="section-heading gallery-heading">
+            <div>
+              <p class="eyebrow">Momenti al Paradiso</p>
+              <h1 id="gallery-title">Galleria</h1>
+              <p>Dal primo caffè alle serate da ricordare.</p>
+            </div>
+            <p class="gallery-count" id="gallery-count" aria-live="polite"></p>
+          </div>
+
+          <div class="gallery-filters" id="gallery-filters" role="tablist" aria-label="Temi della galleria">
+            <button type="button" role="tab" data-gallery-filter="all" aria-selected="true">Tutto</button>
+            <button type="button" role="tab" data-gallery-filter="locale" aria-selected="false">Il locale</button>
+            <button type="button" role="tab" data-gallery-filter="food" aria-selected="false">Colazioni &amp; food</button>
+            <button type="button" role="tab" data-gallery-filter="drinks" aria-selected="false">Drink &amp; bottiglie</button>
+            <button type="button" role="tab" data-gallery-filter="events" aria-selected="false">Feste &amp; serate</button>
+          </div>
+
+          <div class="gallery-grid" id="gallery-grid"></div>
+          <div class="gallery-more-wrap">
+            <button class="button outline" id="gallery-more" type="button">
+              <span>Mostra altri</span>
+              <i data-lucide="chevrons-down"></i>
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="section-inner footer-inner">
+        <div class="footer-brand">
+          <span class="brand-mark">P</span>
+          <div><strong>Paradiso</strong><span>Lounge Bar · Nova Milanese</span></div>
+        </div>
+        <div class="footer-links">
+          <a href="index.html"><i data-lucide="house"></i> Home</a>
+          <a href="https://www.instagram.com/lounge_bar__paradiso/?hl=fr" target="_blank" rel="noreferrer">
+            <i data-lucide="instagram"></i> Instagram
+          </a>
+        </div>
+        <p>© <span id="current-year"></span> Paradiso Lounge Bar</p>
+      </div>
+    </footer>
+
+    <dialog class="gallery-dialog" id="gallery-dialog" aria-label="Galleria Paradiso">
+      <button class="icon-button gallery-dialog-close" type="button" aria-label="Chiudi galleria" title="Chiudi">
+        <i data-lucide="x"></i>
+      </button>
+      <div class="gallery-dialog-media" id="gallery-dialog-media"></div>
+      <div class="gallery-dialog-controls">
+        <button class="icon-button" id="gallery-previous" type="button" aria-label="Precedente" title="Precedente">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <span id="gallery-position"></span>
+        <button class="icon-button" id="gallery-next" type="button" aria-label="Successivo" title="Successivo">
+          <i data-lucide="chevron-right"></i>
+        </button>
+      </div>
+    </dialog>
+  </body>
+</html>
