@@ -270,7 +270,7 @@ const photoReferences = {
       216, 201, 215, 201, 217, 171, 162, 201, 157, 215, 201, 171, 201,
       217, 216, 162, 89, 201, 171, 215, 98, 162, 201, 171, 157, 98,
     ],
-    aperitivo: [202, 119, 117, 202, 14, 223, 119, 120, 226],
+    aperitivo: [202, 119, 117, 202, 14, 223, 119, 226, 120],
     servizi: [200, 185, "generated:pizza-compleanno", 69],
     birre: [
       "assets/images/beer.jpg", "assets/images/beer.jpg", 218, 218, "assets/images/beer.jpg",
