@@ -94,8 +94,6 @@ const galleryMore = document.querySelector("#gallery-more");
 const galleryCount = document.querySelector("#gallery-count");
 const galleryDialog = document.querySelector("#gallery-dialog");
 const galleryDialogMedia = document.querySelector("#gallery-dialog-media");
-const galleryDialogTheme = document.querySelector("#gallery-dialog-theme");
-const galleryDialogTitle = document.querySelector("#gallery-dialog-title");
 const galleryPosition = document.querySelector("#gallery-position");
 
 let activeGalleryTheme = "all";
@@ -131,10 +129,9 @@ function renderGallery() {
           aria-label="Apri ${mediaLabel.toLowerCase()}: ${themeLabel}"
         >
           <img src="${imageSource}" alt="${mediaLabel} ${themeLabel} al Paradiso" loading="lazy" />
-          <span class="gallery-card-type" title="${mediaLabel}">
+          <span class="gallery-card-type" aria-hidden="true">
             <i data-lucide="${item.type === "video" ? "play" : "maximize-2"}"></i>
           </span>
-          <span class="gallery-card-label">${themeLabel}</span>
         </button>
       `;
     })
@@ -170,8 +167,6 @@ function showGalleryItem(index) {
     galleryDialogMedia.append(image);
   }
 
-  galleryDialogTheme.textContent = themeLabel;
-  galleryDialogTitle.textContent = `${mediaLabel} dal Paradiso`;
   galleryPosition.textContent = `${activeGalleryIndex + 1} / ${currentGalleryItems.length}`;
 }
 

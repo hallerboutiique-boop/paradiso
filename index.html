@@ -10,10 +10,10 @@
     <meta name="theme-color" content="#f5fbff" />
     <title>Paradiso | Lounge Bar Nova Milanese</title>
     <link rel="preconnect" href="https://unpkg.com" />
-    <link rel="stylesheet" href="styles.css?v=20260724-1" />
+    <link rel="stylesheet" href="styles.css?v=20260724-3" />
     <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
     <script src="app.js" defer></script>
-    <script src="gallery.js?v=20260724-1" defer></script>
+    <script src="gallery.js?v=20260724-3" defer></script>
   </head>
   <body data-theme="day">
     <header class="site-header" id="top">
@@ -30,6 +30,10 @@
       </nav>
 
       <div class="header-actions">
+        <a class="icon-button gallery-header-link" href="#galleria" aria-label="Apri la galleria">
+          <i data-lucide="images"></i>
+        </a>
+
         <a
           class="icon-button instagram-link"
           href="https://www.instagram.com/lounge_bar__paradiso/?hl=fr"
@@ -266,6 +270,7 @@
           <div><strong>Paradiso</strong><span>Lounge Bar · Nova Milanese</span></div>
         </div>
         <div class="footer-links">
+          <a href="#galleria"><i data-lucide="images"></i> Galleria</a>
           <a href="https://www.instagram.com/lounge_bar__paradiso/?hl=fr" target="_blank" rel="noreferrer">
             <i data-lucide="instagram"></i> Instagram
           </a>
@@ -309,16 +314,10 @@
       <button class="button primary dialog-done" type="button">Fatto</button>
     </dialog>
 
-    <dialog class="gallery-dialog" id="gallery-dialog" aria-labelledby="gallery-dialog-title">
-      <div class="gallery-dialog-bar">
-        <div>
-          <p class="eyebrow" id="gallery-dialog-theme"></p>
-          <h2 id="gallery-dialog-title">Paradiso</h2>
-        </div>
-        <button class="icon-button gallery-dialog-close" type="button" aria-label="Chiudi galleria" title="Chiudi">
-          <i data-lucide="x"></i>
-        </button>
-      </div>
+    <dialog class="gallery-dialog" id="gallery-dialog" aria-label="Galleria Paradiso">
+      <button class="icon-button gallery-dialog-close" type="button" aria-label="Chiudi galleria" title="Chiudi">
+        <i data-lucide="x"></i>
+      </button>
       <div class="gallery-dialog-media" id="gallery-dialog-media"></div>
       <div class="gallery-dialog-controls">
         <button class="icon-button" id="gallery-previous" type="button" aria-label="Precedente" title="Precedente">

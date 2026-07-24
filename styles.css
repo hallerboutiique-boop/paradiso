@@ -147,6 +147,10 @@ button {
   gap: 8px;
 }
 
+.icon-button.gallery-header-link {
+  display: none;
+}
+
 .icon-button {
   position: relative;
   width: 42px;
@@ -683,14 +687,6 @@ body[data-theme="night"] .menu-card {
   transition: transform 320ms ease, filter 320ms ease;
 }
 
-.gallery-card::after {
-  content: "";
-  position: absolute;
-  inset: 44% 0 0;
-  pointer-events: none;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.72));
-}
-
 .gallery-card:hover img {
   transform: scale(1.025);
   filter: brightness(0.9);
@@ -701,21 +697,9 @@ body[data-theme="night"] .menu-card {
   outline-offset: 3px;
 }
 
-.gallery-card-label,
 .gallery-card-type {
   position: absolute;
   z-index: 1;
-}
-
-.gallery-card-label {
-  right: 14px;
-  bottom: 13px;
-  left: 14px;
-  overflow: hidden;
-  font-size: 13px;
-  font-weight: 800;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .gallery-card-type {
@@ -747,6 +731,7 @@ body[data-theme="night"] .menu-card {
 }
 
 .gallery-dialog {
+  position: relative;
   width: min(1120px, calc(100% - 32px));
   height: min(880px, calc(100svh - 32px));
   padding: 0;
@@ -760,7 +745,7 @@ body[data-theme="night"] .menu-card {
 
 .gallery-dialog[open] {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-rows: minmax(0, 1fr) auto;
 }
 
 .gallery-dialog::backdrop {
@@ -768,19 +753,15 @@ body[data-theme="night"] .menu-card {
   backdrop-filter: blur(6px);
 }
 
-.gallery-dialog-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  min-height: 86px;
-  padding: 16px 20px;
-  border-bottom: 1px solid var(--line);
-}
-
-.gallery-dialog-bar h2 {
-  margin: 2px 0 0;
-  font-size: 24px;
+.gallery-dialog-close {
+  position: absolute;
+  z-index: 2;
+  top: 14px;
+  right: 14px;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.45);
+  background: rgba(4, 8, 13, 0.72);
+  backdrop-filter: blur(8px);
 }
 
 .gallery-dialog-media {
@@ -1322,6 +1303,10 @@ body[data-theme="night"] .map-wrap {
     display: none;
   }
 
+  .icon-button.gallery-header-link {
+    display: inline-grid;
+  }
+
   .hero h1 {
     font-size: 92px;
   }
@@ -1470,11 +1455,6 @@ body[data-theme="night"] .map-wrap {
     height: calc(100svh - 20px);
   }
 
-  .gallery-dialog-bar {
-    min-height: 76px;
-    padding: 12px 14px;
-  }
-
   .gallery-dialog-controls {
     min-height: 62px;
     padding: 10px 14px;
@@ -1549,13 +1529,6 @@ body[data-theme="night"] .map-wrap {
 
   .menu-grid {
     grid-template-columns: 1fr;
-  }
-
-  .gallery-card-label {
-    right: 11px;
-    bottom: 10px;
-    left: 11px;
-    font-size: 12px;
   }
 
   .gallery-card-type {
