@@ -10,8 +10,7 @@ const bottle = (name, price, description, photo) => ({
   name,
   price,
   description,
-  image: `assets/images/products/${photo}.jpg`,
-  imageFit: "contain",
+  image: `assets/images/bottles-studio/${photo}.png`,
 });
 
 const partyServices = [
