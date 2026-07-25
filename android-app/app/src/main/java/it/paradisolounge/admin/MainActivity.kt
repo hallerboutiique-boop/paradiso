@@ -93,9 +93,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.FirebaseApp
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.messaging.FirebaseMessaging
-import com.google.android.gms.codescanner.GmsBarcodeScannerOptions
-import com.google.android.gms.codescanner.GmsBarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
+import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
+import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import java.text.NumberFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
