@@ -560,6 +560,12 @@ const drawerBackdrop = document.querySelector("#drawer-backdrop");
 const bookingForm = document.querySelector("#booking-form");
 const confirmationDialog = document.querySelector("#confirmation-dialog");
 const productDialog = document.querySelector("#product-dialog");
+const menuSearch = document.querySelector("#menu-search");
+const productSearchInput = document.querySelector("#product-search");
+const productSearchResults = document.querySelector("#product-search-results");
+const productSearchClear = document.querySelector("#product-search-clear");
+let searchMatches = [];
+let activeSearchIndex = -1;
 
 function readStorage(key, fallback) {
   try {
@@ -584,6 +590,122 @@ function itemId(theme, category, name) {
   return `${theme}:${category}:${name}`.toLowerCase().replace(/[^a-z0-9à-ž]+/gi, "-");
 }
 
+function normalizeSearchText(value) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLocaleLowerCase("it-IT");
+}
+
+function closeProductSearch() {
+  searchMatches = [];
+  activeSearchIndex = -1;
+  productSearchResults.innerHTML = "";
+  productSearchResults.hidden = true;
+  productSearchInput.setAttribute("aria-expanded", "false");
+  productSearchInput.removeAttribute("aria-activedescendant");
+}
+
+function resetProductSearch() {
+  productSearchInput.value = "";
+  productSearchInput.placeholder =
+    currentTheme === "day" ? "Cerca nel menu del giorno" : "Cerca nel menu della sera";
+  productSearchClear.hidden = true;
+  closeProductSearch();
+}
+
+function setActiveSearchResult(index) {
+  if (!searchMatches.length) return;
+  activeSearchIndex = (index + searchMatches.length) % searchMatches.length;
+  productSearchResults.querySelectorAll("[data-search-preview]").forEach((button, buttonIndex) => {
+    const isActive = buttonIndex === activeSearchIndex;
+    button.setAttribute("aria-selected", String(isActive));
+    if (isActive) {
+      productSearchInput.setAttribute("aria-activedescendant", button.id);
+      button.scrollIntoView({ block: "nearest" });
+    }
+  });
+}
+
+function renderProductSearch() {
+  const query = normalizeSearchText(productSearchInput.value.trim());
+  productSearchClear.hidden = !query;
+  activeSearchIndex = -1;
+  productSearchInput.removeAttribute("aria-activedescendant");
+
+  if (!query) {
+    closeProductSearch();
+    return;
+  }
+
+  const terms = query.split(/\s+/).filter(Boolean);
+  searchMatches = Object.entries(menus[currentTheme].categories)
+    .flatMap(([categoryKey, category]) =>
+      category.items.map((product) => ({
+        ...product,
+        id: itemId(currentTheme, categoryKey, product.name),
+        categoryLabel: category.label,
+      })),
+    )
+    .filter((product) => {
+      const searchable = normalizeSearchText(
+        `${product.name} ${product.categoryLabel} ${product.description || ""}`,
+      );
+      return terms.every((term) => searchable.includes(term));
+    })
+    .slice(0, 8);
+
+  productSearchResults.hidden = false;
+  productSearchInput.setAttribute("aria-expanded", "true");
+
+  if (!searchMatches.length) {
+    productSearchResults.innerHTML = `
+      <div class="menu-search-empty">
+        <i data-lucide="search-x"></i>
+        <span>Nessun prodotto trovato</span>
+      </div>
+    `;
+    refreshIcons();
+    return;
+  }
+
+  productSearchResults.innerHTML = searchMatches
+    .map(
+      (product, index) => `
+        <button
+          class="menu-search-result"
+          id="product-search-result-${index}"
+          type="button"
+          role="option"
+          aria-selected="false"
+          data-search-preview="${product.id}"
+        >
+          <img
+            class="${product.imageFit === "contain" ? "contain" : ""}"
+            src="${product.image}"
+            alt=""
+            loading="lazy"
+          />
+          <span class="menu-search-result-copy">
+            <small>${product.categoryLabel}</small>
+            <strong>${product.name}</strong>
+          </span>
+          <span class="menu-search-result-price">${euro.format(product.price)}</span>
+          <i data-lucide="maximize-2"></i>
+        </button>
+      `,
+    )
+    .join("");
+  refreshIcons();
+}
+
+function openSearchPreview(id) {
+  productSearchInput.value = "";
+  productSearchClear.hidden = true;
+  closeProductSearch();
+  openProductPreview(id);
+}
+
 function setTheme(theme) {
   currentTheme = theme;
   activeCategory = Object.keys(menus[theme].categories)[0];
@@ -606,6 +728,7 @@ function setTheme(theme) {
   heroImage.alt = menu.heroAlt;
   heroImage.style.setProperty("--hero-position", menu.heroPosition);
   heroImage.style.setProperty("--hero-position-mobile", menu.heroPositionMobile);
+  resetProductSearch();
   renderTabs();
   renderMenu();
   refreshIcons();
@@ -952,6 +1075,39 @@ menuGrid.addEventListener("click", (event) => {
 
   const previewButton = event.target.closest("[data-preview-item]");
   if (previewButton) openProductPreview(previewButton.dataset.previewItem);
+});
+
+productSearchInput.addEventListener("input", renderProductSearch);
+productSearchInput.addEventListener("focus", () => {
+  if (productSearchInput.value.trim()) renderProductSearch();
+});
+productSearchInput.addEventListener("keydown", (event) => {
+  if (event.key === "ArrowDown" && searchMatches.length) {
+    event.preventDefault();
+    setActiveSearchResult(activeSearchIndex + 1);
+  } else if (event.key === "ArrowUp" && searchMatches.length) {
+    event.preventDefault();
+    setActiveSearchResult(activeSearchIndex - 1);
+  } else if (event.key === "Enter" && searchMatches.length) {
+    event.preventDefault();
+    const match = searchMatches[activeSearchIndex >= 0 ? activeSearchIndex : 0];
+    openSearchPreview(match.id);
+  } else if (event.key === "Escape") {
+    closeProductSearch();
+  }
+});
+productSearchResults.addEventListener("click", (event) => {
+  const result = event.target.closest("[data-search-preview]");
+  if (result) openSearchPreview(result.dataset.searchPreview);
+});
+productSearchClear.addEventListener("click", () => {
+  productSearchInput.value = "";
+  productSearchClear.hidden = true;
+  closeProductSearch();
+  productSearchInput.focus();
+});
+document.addEventListener("click", (event) => {
+  if (!menuSearch.contains(event.target)) closeProductSearch();
 });
 
 showMoreButton.addEventListener("click", () => {
