@@ -13,7 +13,7 @@ val apiBaseUrl = providers.gradleProperty("PARADISO_API_BASE_URL")
 
 android {
     namespace = "it.paradisolounge.admin"
-    compileSdk = 37
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "it.paradisolounge.admin"
