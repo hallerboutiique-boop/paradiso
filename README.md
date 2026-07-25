@@ -15,4 +15,4 @@ La versione attuale include:
 - dashboard `admin.html` con stati ed esportazione CSV;
 - mappa e collegamento Instagram.
 
-L'invio email e la condivisione reale dei dati tra dispositivi richiedono un backend, da collegare quando saranno disponibili email e hosting.
+L'invio automatico di email e SMS, oltre alla condivisione reale dei dati tra dispositivi, richiede un backend e credenziali per un provider di posta e messaggistica.
