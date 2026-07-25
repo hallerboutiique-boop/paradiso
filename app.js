@@ -328,7 +328,7 @@ const photoReferences = {
       "assets/images/night-drinks/gin/nordes-v2.webp",
       "assets/images/night-drinks/gin/portofino-v2.webp",
       98,
-      "assets/images/night-drinks/gin/rivo-v2.webp",
+      "assets/images/night-drinks/gin/rivo-v3.webp",
       "assets/images/night-drinks/gin/royal-windsor-v2.webp",
       "assets/images/night-drinks/gin/santamania-v2.webp",
       "assets/images/night-drinks/gin/santana-v2.webp",
