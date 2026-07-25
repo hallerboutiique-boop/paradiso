@@ -319,7 +319,12 @@ const photoReferences = {
       216, 201, 215, 201, 217, 171, 162, 201, 157, 215, 201, 171, 201,
       217, 216, 162, 89, 201, 171, 215, 98, 162, 201, 171, 157, 98,
     ],
-    aperitivo: [202, 119, 117, 202, 14, 223, 119, "assets/images/generated/tagliere-base-v3.webp", 120],
+    aperitivo: [
+      202, 119, 117, 202, 14, 223,
+      "assets/images/generated/tagliere-v4.webp",
+      120,
+      "assets/images/generated/tagliere-base-v3.webp",
+    ],
     servizi: [200, 185, "generated:pizza-compleanno", 69],
     birre: [
       "assets/images/night-drinks/beers/birra-bottiglia.webp",
