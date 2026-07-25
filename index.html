@@ -10,10 +10,10 @@
     <meta name="theme-color" content="#f5fbff" />
     <title>Paradiso | Lounge Bar Nova Milanese</title>
     <link rel="preconnect" href="https://unpkg.com" />
-    <link rel="stylesheet" href="styles.css?v=20260725-15" />
+    <link rel="stylesheet" href="styles.css?v=20260725-16" />
     <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
     <script src="drink-profiles.js?v=20260725-1" defer></script>
-    <script src="app.js?v=20260725-23" defer></script>
+    <script src="app.js?v=20260725-24" defer></script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -226,10 +226,20 @@
                 Data
                 <input name="date" id="booking-date" type="date" required />
               </label>
-              <label>
-                Ora
-                <input name="time" type="time" min="00:00" max="23:59" step="60" required />
-              </label>
+              <div class="time-field">
+                <label for="booking-time">Ora</label>
+                <div class="time-input-control">
+                  <input id="booking-time" name="time" type="time" min="00:00" max="23:59" step="60" required />
+                  <div class="time-stepper" aria-label="Modifica orario">
+                    <button type="button" data-time-step="1" aria-label="Aumenta l'orario di un minuto" title="Aumenta di un minuto">
+                      <i data-lucide="chevron-up"></i>
+                    </button>
+                    <button type="button" data-time-step="-1" aria-label="Riduci l'orario di un minuto" title="Riduci di un minuto">
+                      <i data-lucide="chevron-down"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
               <label>
                 Persone
                 <input name="guests" type="number" min="1" max="20" value="2" required />

@@ -817,6 +817,18 @@ function setMinDate() {
   field.value = today;
 }
 
+function adjustBookingTime(amount) {
+  const field = document.querySelector("#booking-time");
+  const [hours = "12", minutes = "00"] = (field.value || "12:00").split(":");
+  const totalMinutes = (Number(hours) * 60 + Number(minutes) + amount + 1440) % 1440;
+  const nextHours = String(Math.floor(totalMinutes / 60)).padStart(2, "0");
+  const nextMinutes = String(totalMinutes % 60).padStart(2, "0");
+  field.value = `${nextHours}:${nextMinutes}`;
+  field.dispatchEvent(new Event("input", { bubbles: true }));
+  field.dispatchEvent(new Event("change", { bubbles: true }));
+  field.focus();
+}
+
 function refreshIcons() {
   window.lucide?.createIcons({ attrs: { "aria-hidden": "true" } });
 }
@@ -872,6 +884,9 @@ document.querySelector("#checkout-button").addEventListener("click", () => {
 });
 
 bookingForm.addEventListener("submit", submitBooking);
+document.querySelectorAll("[data-time-step]").forEach((button) => {
+  button.addEventListener("click", () => adjustBookingTime(Number(button.dataset.timeStep)));
+});
 document.querySelector(".dialog-close").addEventListener("click", () => confirmationDialog.close());
 document.querySelector(".dialog-done").addEventListener("click", () => confirmationDialog.close());
 document.querySelector(".product-dialog-close").addEventListener("click", () => productDialog.close());

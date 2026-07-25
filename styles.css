@@ -1163,6 +1163,59 @@ body.gallery-open {
   font-weight: 800;
 }
 
+.time-field {
+  display: grid;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.time-input-control {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 30px;
+  min-width: 0;
+}
+
+.time-input-control input {
+  min-width: 0;
+  border-radius: 5px 0 0 5px;
+}
+
+.time-stepper {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-left: 0;
+  border-radius: 0 5px 5px 0;
+  background: var(--surface);
+}
+
+.time-stepper button {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+}
+
+.time-stepper button + button {
+  border-top: 1px solid var(--line);
+}
+
+.time-stepper button:hover,
+.time-stepper button:focus-visible {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+.time-stepper svg {
+  width: 14px;
+  height: 14px;
+}
+
 .optional {
   color: var(--muted);
   font-size: 11px;
