@@ -491,7 +491,8 @@ func (a *App) createBooking(w http.ResponseWriter, r *http.Request) {
 
 	payload, _ := json.Marshal(map[string]any{
 		"bookingId": booking.ID, "code": booking.Code, "customerName": booking.CustomerName,
-		"date": booking.ReservationDate, "time": booking.ReservationTime, "guests": booking.Guests,
+		"phone": booking.Phone, "date": booking.ReservationDate,
+		"time": booking.ReservationTime, "guests": booking.Guests,
 	})
 	if _, err = tx.ExecContext(r.Context(), `
 		INSERT INTO notification_outbox (booking_id, event_type, payload)
@@ -923,19 +924,20 @@ func (a *App) dispatchOutbox(ctx context.Context) error {
 	guests := fmt.Sprint(payload["guests"])
 	response, sendErr := a.messaging.SendEachForMulticast(ctx, &messaging.MulticastMessage{
 		Fids: fids,
-		Notification: &messaging.Notification{
-			Title: "Nuova prenotazione " + code,
-			Body:  date + " alle " + clock + " · " + guests + " ospiti",
-		},
 		Data: map[string]string{
-			"type": "booking.created", "bookingId": fmt.Sprint(payload["bookingId"]), "code": code,
+			"type":         "booking.created",
+			"bookingId":    fmt.Sprint(payload["bookingId"]),
+			"code":         code,
+			"customerName": fmt.Sprint(payload["customerName"]),
+			"phone":        fmt.Sprint(payload["phone"]),
+			"date":         date,
+			"time":         clock,
+			"guests":       guests,
+			"title":        "Nuova prenotazione " + code,
+			"body":         date + " alle " + clock + " · " + guests + " ospiti",
 		},
 		Android: &messaging.AndroidConfig{
 			Priority: "high",
-			Notification: &messaging.AndroidNotification{
-				ChannelID: "bookings",
-				Sound:     "default",
-			},
 		},
 	})
 	if sendErr != nil {

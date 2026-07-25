@@ -67,7 +67,29 @@ class ParadisoMessagingService : FirebaseMessagingService() {
         val body = message.notification?.body
             ?: message.data["body"]
             ?: "Apri Paradiso Admin per i dettagli."
-        showParadisoNotification(this, title, body)
+        val smsResult = if (message.data["type"] == "booking.created") {
+            SmsGateway.sendBookingConfirmation(
+                context = this,
+                bookingId = message.data["bookingId"].orEmpty(),
+                code = message.data["code"].orEmpty(),
+                phone = message.data["phone"].orEmpty(),
+                reservationDate = message.data["date"].orEmpty(),
+                reservationTime = message.data["time"].orEmpty(),
+                guests = message.data["guests"]?.toIntOrNull() ?: 0,
+            )
+        } else {
+            SmsGatewayResult.DISABLED
+        }
+        val notificationBody = when (smsResult) {
+            SmsGatewayResult.QUEUED -> "$body · SMS di conferma inviato"
+            SmsGatewayResult.PERMISSION_MISSING -> "$body · SMS non inviato: autorizzazione mancante"
+            SmsGatewayResult.NO_TELEPHONY,
+            SmsGatewayResult.INVALID_DESTINATION,
+            SmsGatewayResult.FAILED,
+            -> "$body · SMS di conferma non inviato"
+            else -> body
+        }
+        showParadisoNotification(this, title, notificationBody)
     }
 }
 
@@ -86,6 +108,17 @@ class BookingSyncWorker(
                 val additions = bookings.filter { it.createdAt > previous && it.status == "Nuovo" }
                 if (additions.isNotEmpty()) {
                     val latest = additions.maxBy { it.createdAt }
+                    additions.sortedBy { it.createdAt }.forEach { booking ->
+                        SmsGateway.sendBookingConfirmation(
+                            context = applicationContext,
+                            bookingId = booking.id,
+                            code = booking.code,
+                            phone = booking.phone,
+                            reservationDate = booking.reservationDate,
+                            reservationTime = booking.reservationTime,
+                            guests = booking.guests,
+                        )
+                    }
                     val body = if (additions.size == 1) {
                         "${latest.reservationDate} alle ${latest.reservationTime} · ${latest.guests} ospiti"
                     } else {

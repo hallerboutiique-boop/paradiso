@@ -100,6 +100,17 @@ func TestBookingAndAccountingFlow(t *testing.T) {
 	if bookingID == "" || created["code"] == "" {
 		t.Fatalf("invalid booking response: %#v", created)
 	}
+	var outboxPayloadJSON string
+	if err := service.db.QueryRow(`SELECT payload FROM notification_outbox WHERE booking_id = $1`, bookingID).Scan(&outboxPayloadJSON); err != nil {
+		t.Fatalf("read notification payload: %v", err)
+	}
+	var outboxPayload map[string]any
+	if err := json.Unmarshal([]byte(outboxPayloadJSON), &outboxPayload); err != nil {
+		t.Fatalf("decode notification payload: %v", err)
+	}
+	if outboxPayload["phone"] != "+39 333 1234567" || outboxPayload["customerName"] != "Mario Rossi" {
+		t.Fatalf("notification payload lacks SMS gateway data: %#v", outboxPayload)
+	}
 
 	list := performJSON(t, service.Handler(), http.MethodGet, "/v1/bookings", nil, token)
 	bookings, _ := list["bookings"].([]any)

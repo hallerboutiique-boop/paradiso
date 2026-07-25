@@ -42,6 +42,7 @@ import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.RestaurantMenu
+import androidx.compose.material.icons.filled.Sms
 import androidx.compose.material.icons.filled.TrendingDown
 import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material.icons.filled.Visibility
@@ -154,6 +155,9 @@ private fun ParadisoApp(vm: ParadisoViewModel = viewModel()) {
     val context = LocalContext.current
     var selectedBooking by remember { mutableStateOf<Booking?>(null) }
     var showLedgerDialog by remember { mutableStateOf(false) }
+    var showSmsGatewayDialog by remember { mutableStateOf(false) }
+    var smsGatewayEnabled by remember { mutableStateOf(SmsGateway.isEnabled(context)) }
+    var smsPermissionDenied by remember { mutableStateOf(false) }
     val qrScanner = remember(context) {
         val options = GmsBarcodeScannerOptions.Builder()
             .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
@@ -175,6 +179,14 @@ private fun ParadisoApp(vm: ParadisoViewModel = viewModel()) {
     val notificationPermission = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission(),
     ) {}
+    val smsPermission = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission(),
+    ) { granted ->
+        SmsGateway.setEnabled(context, granted)
+        smsGatewayEnabled = granted
+        smsPermissionDenied = !granted
+        showSmsGatewayDialog = !granted
+    }
 
     LaunchedEffect(Unit) {
         if (Build.VERSION.SDK_INT >= 33 &&
@@ -191,6 +203,9 @@ private fun ParadisoApp(vm: ParadisoViewModel = viewModel()) {
                     vm.registerDevice(messagingToken, "${Build.MANUFACTURER} ${Build.MODEL}")
                 }
             }
+        }
+        if (state.token != null && !SmsGateway.hasBeenConfigured(context)) {
+            showSmsGatewayDialog = true
         }
     }
 
@@ -234,6 +249,17 @@ private fun ParadisoApp(vm: ParadisoViewModel = viewModel()) {
                         }
                     },
                     actions = {
+                        IconButton(onClick = { showSmsGatewayDialog = true }) {
+                            Icon(
+                                Icons.Default.Sms,
+                                contentDescription = if (smsGatewayEnabled) {
+                                    "Gateway SMS attivo"
+                                } else {
+                                    "Attiva gateway SMS"
+                                },
+                                tint = if (smsGatewayEnabled) Green else TextMuted,
+                            )
+                        }
                         IconButton(onClick = startQrScanner) {
                             Icon(Icons.Default.QrCodeScanner, contentDescription = "Scansiona QR prenotazione")
                         }
@@ -314,6 +340,32 @@ private fun ParadisoApp(vm: ParadisoViewModel = viewModel()) {
             },
         )
     }
+
+    if (showSmsGatewayDialog) {
+        SmsGatewayDialog(
+            enabled = smsGatewayEnabled,
+            permissionDenied = smsPermissionDenied,
+            onDismiss = {
+                showSmsGatewayDialog = false
+                smsPermissionDenied = false
+            },
+            onEnable = {
+                smsPermissionDenied = false
+                if (context.checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
+                    SmsGateway.setEnabled(context, true)
+                    smsGatewayEnabled = true
+                    showSmsGatewayDialog = false
+                } else {
+                    smsPermission.launch(Manifest.permission.SEND_SMS)
+                }
+            },
+            onDisable = {
+                SmsGateway.setEnabled(context, false)
+                smsGatewayEnabled = false
+                showSmsGatewayDialog = false
+            },
+        )
+    }
 }
 
 @Composable
@@ -325,6 +377,58 @@ private fun LoadingScreen() {
             CircularProgressIndicator(color = Gold)
         }
     }
+}
+
+@Composable
+private fun SmsGatewayDialog(
+    enabled: Boolean,
+    permissionDenied: Boolean,
+    onDismiss: () -> Unit,
+    onEnable: () -> Unit,
+    onDisable: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("SMS automatici") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Text(
+                    if (enabled) {
+                        "Gateway attivo: le nuove prenotazioni ricevono automaticamente un SMS."
+                    } else {
+                        "Questo telefono invierà le conferme ai clienti usando la propria SIM."
+                    },
+                )
+                Text(
+                    "Imposta 3914371297 come SIM predefinita per gli SMS nelle impostazioni Android.",
+                    color = Gold,
+                    fontWeight = FontWeight.Bold,
+                )
+                Text(
+                    "Non usa servizi esterni. Gli SMS consumano il credito o i messaggi inclusi nel piano della SIM.",
+                    color = TextMuted,
+                    fontSize = 13.sp,
+                )
+                if (permissionDenied) {
+                    Text(
+                        "Autorizzazione SMS negata. Concedila per attivare l'invio automatico.",
+                        color = Red,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            Button(onClick = if (enabled) onDisable else onEnable) {
+                Text(if (enabled) "Disattiva" else "Attiva SMS")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Chiudi")
+            }
+        },
+    )
 }
 
 @Composable
