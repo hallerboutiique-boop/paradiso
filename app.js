@@ -818,8 +818,11 @@ function showToast(message) {
   }, 1800);
 }
 
-function submitBooking(event) {
+async function submitBooking(event) {
   event.preventDefault();
+  const submitButton = bookingForm.querySelector(".submit-button");
+  submitButton.disabled = true;
+  submitButton.setAttribute("aria-busy", "true");
   const data = new FormData(bookingForm);
   const code = `P-${Date.now().toString().slice(-6)}`;
   const order = {
@@ -842,6 +845,32 @@ function submitBooking(event) {
     status: "Nuovo",
   };
 
+  try {
+    await fetch("https://script.google.com/macros/s/AKfycbzd0ZEddVWO3gwgnD08PbNH_Yh4D5A1REOhCMGEp75DyxXWaVxxMtZtcQ79geN1mx1s/exec", {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=UTF-8" },
+      body: JSON.stringify({
+        source: "paradiso-booking-v1",
+        website: "",
+        id: order.id,
+        name: order.customer.name,
+        phone: order.customer.phone,
+        email: order.customer.email,
+        date: order.reservation.date,
+        time: order.reservation.time,
+        guests: order.reservation.guests,
+        notes: order.reservation.notes,
+        items: order.items,
+      }),
+    });
+  } catch {
+    showToast("Email non inviata. Controlla la connessione e riprova.");
+    submitButton.disabled = false;
+    submitButton.removeAttribute("aria-busy");
+    return;
+  }
+
   const orders = readStorage(ORDER_KEY, []);
   orders.unshift(order);
   writeStorage(ORDER_KEY, orders);
@@ -854,6 +883,8 @@ function submitBooking(event) {
   persistCart();
   bookingForm.reset();
   setMinDate();
+  submitButton.disabled = false;
+  submitButton.removeAttribute("aria-busy");
 }
 
 function formatDate(value) {
