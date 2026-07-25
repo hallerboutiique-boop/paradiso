@@ -10,7 +10,7 @@
     <meta name="theme-color" content="#f5fbff" />
     <title>Galleria | Paradiso Lounge Bar</title>
     <link rel="preconnect" href="https://unpkg.com" />
-    <link rel="stylesheet" href="styles.css?v=20260724-9" />
+    <link rel="stylesheet" href="styles.css?v=20260725-14" />
     <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
     <script src="gallery-page.js?v=20260724-1" defer></script>
     <script src="gallery.js?v=20260724-7" defer></script>
@@ -18,7 +18,10 @@
   <body data-theme="day">
     <header class="site-header" id="top">
       <a class="brand" href="index.html" aria-label="Torna alla homepage del Paradiso">
-        <span class="brand-mark">P</span>
+        <span class="brand-mark" aria-hidden="true">
+          <i class="brand-symbol brand-symbol-day" data-lucide="cloud"></i>
+          <i class="brand-symbol brand-symbol-night" data-lucide="moon"></i>
+        </span>
         <span class="brand-name">Paradiso</span>
       </a>
 
@@ -27,6 +30,7 @@
         <a href="index.html#prenota">Prenota</a>
         <a href="index.html#dove-siamo">Dove siamo</a>
         <a href="galleria.html" aria-current="page">Galleria</a>
+        <a href="eventi.html">Eventi</a>
       </nav>
 
       <div class="header-actions">
@@ -90,7 +94,10 @@
     <footer class="site-footer">
       <div class="section-inner footer-inner">
         <div class="footer-brand">
-          <span class="brand-mark">P</span>
+          <span class="brand-mark" aria-hidden="true">
+            <i class="brand-symbol brand-symbol-day" data-lucide="cloud"></i>
+            <i class="brand-symbol brand-symbol-night" data-lucide="moon"></i>
+          </span>
           <div><strong>Paradiso</strong><span>Lounge Bar · Nova Milanese</span></div>
         </div>
         <div class="footer-links">

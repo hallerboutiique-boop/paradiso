@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Eventi, feste private e serate del Paradiso Lounge Bar a Nova Milanese."
+    />
+    <meta name="theme-color" content="#f5fbff" />
+    <title>Eventi | Paradiso Lounge Bar</title>
+    <link rel="preconnect" href="https://unpkg.com" />
+    <link rel="stylesheet" href="styles.css?v=20260725-14" />
+    <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+    <script src="eventi.js?v=20260725-1" defer></script>
+  </head>
+  <body data-theme="day">
+    <header class="site-header" id="top">
+      <a class="brand" href="index.html" aria-label="Torna alla homepage del Paradiso">
+        <span class="brand-mark" aria-hidden="true">
+          <i class="brand-symbol brand-symbol-day" data-lucide="cloud"></i>
+          <i class="brand-symbol brand-symbol-night" data-lucide="moon"></i>
+        </span>
+        <span class="brand-name">Paradiso</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Navigazione principale">
+        <a href="index.html#menu">Menu</a>
+        <a href="index.html#prenota">Prenota</a>
+        <a href="index.html#dove-siamo">Dove siamo</a>
+        <a href="galleria.html">Galleria</a>
+        <a href="eventi.html" aria-current="page">Eventi</a>
+      </nav>
+
+      <div class="header-actions">
+        <a class="icon-button gallery-header-link" href="index.html" aria-label="Torna alla homepage">
+          <i data-lucide="house"></i>
+        </a>
+        <a
+          class="icon-button instagram-link"
+          href="https://www.instagram.com/lounge_bar__paradiso/?hl=it"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Apri Instagram"
+          title="Instagram"
+        >
+          <i data-lucide="instagram"></i>
+        </a>
+        <div class="theme-toggle compact" role="group" aria-label="Cambia versione del sito">
+          <button type="button" data-set-theme="day" aria-label="Versione giorno" title="Giorno">
+            <i data-lucide="sun"></i>
+          </button>
+          <button type="button" data-set-theme="night" aria-label="Versione notte" title="Notte">
+            <i data-lucide="moon"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="events-page">
+      <section class="events-intro section" aria-labelledby="events-title">
+        <div class="section-inner events-intro-inner">
+          <p class="eyebrow">Serate e occasioni speciali</p>
+          <h1 id="events-title">Eventi al Paradiso</h1>
+          <p>Locandine, feste e appuntamenti del lounge bar.</p>
+        </div>
+      </section>
+
+      <section class="featured-event section" aria-labelledby="featured-event-title">
+        <div class="section-inner featured-event-layout">
+          <button
+            class="event-poster-button"
+            type="button"
+            data-event-image="assets/gallery/posters/VID-20260721-WA0320.webp"
+            aria-label="Ingrandisci la locandina Drink da 1 litro"
+          >
+            <img
+              src="assets/gallery/posters/VID-20260721-WA0320.webp"
+              alt="Locandina originale della serata drink da un litro al Paradiso"
+              loading="eager"
+            />
+            <span><i data-lucide="maximize-2"></i></span>
+          </button>
+
+          <div class="featured-event-copy">
+            <p class="eyebrow">Ogni venerdì e sabato sera</p>
+            <h2 id="featured-event-title">Drink da 1 litro</h2>
+            <p class="event-lead">Una delle serate ricorrenti del Paradiso, da vivere in compagnia.</p>
+            <div class="event-price-row" aria-label="Prezzi della promozione">
+              <span>Donne <strong>8 €</strong></span>
+              <span>Uomini <strong>10 €</strong></span>
+            </div>
+            <div class="event-actions">
+              <a class="button primary" href="index.html#prenota">
+                Prenota
+                <i data-lucide="calendar-check"></i>
+              </a>
+              <a
+                class="button outline"
+                href="https://www.instagram.com/lounge_bar__paradiso/?hl=it"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Instagram
+                <i data-lucide="instagram"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="event-moments section" aria-labelledby="event-moments-title">
+        <div class="section-inner">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Feste al locale</p>
+              <h2 id="event-moments-title">Il Paradiso per il tuo evento</h2>
+              <p>Compleanni, feste per bambini e serate a tema, con immagini originali del locale.</p>
+            </div>
+          </div>
+
+          <div class="event-moments-grid">
+            <article class="event-moment">
+              <button type="button" data-event-image="assets/gallery/photos/IMG-20260721-WA0185.webp">
+                <img
+                  src="assets/gallery/photos/IMG-20260721-WA0185.webp"
+                  alt="Allestimento originale per una festa di compleanno al Paradiso"
+                  loading="lazy"
+                />
+              </button>
+              <div><h3>Compleanni</h3><p>Allestimenti, brindisi e una serata costruita intorno a te.</p></div>
+            </article>
+            <article class="event-moment">
+              <button type="button" data-event-image="assets/gallery/photos/IMG-20260721-WA0199.webp">
+                <img
+                  src="assets/gallery/photos/IMG-20260721-WA0199.webp"
+                  alt="Festa per bambini organizzata al Paradiso"
+                  loading="lazy"
+                />
+              </button>
+              <div><h3>Feste per bambini</h3><p>Spazio per torte, decorazioni e momenti da ricordare.</p></div>
+            </article>
+            <article class="event-moment">
+              <button type="button" data-event-image="assets/gallery/photos/IMG-20260721-WA0189.webp">
+                <img
+                  src="assets/gallery/photos/IMG-20260721-WA0189.webp"
+                  alt="Serata di Halloween al Paradiso"
+                  loading="lazy"
+                />
+              </button>
+              <div><h3>Serate a tema</h3><p>Atmosfere speciali, musica e dettagli pensati per ogni occasione.</p></div>
+            </article>
+          </div>
+
+          <div class="events-footer-action">
+            <a class="button primary" href="index.html#prenota">Organizza il tuo evento</a>
+            <a class="button outline" href="galleria.html">Vedi tutta la galleria</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="section-inner footer-inner">
+        <div class="footer-brand">
+          <span class="brand-mark" aria-hidden="true">
+            <i class="brand-symbol brand-symbol-day" data-lucide="cloud"></i>
+            <i class="brand-symbol brand-symbol-night" data-lucide="moon"></i>
+          </span>
+          <div><strong>Paradiso</strong><span>Lounge Bar · Nova Milanese</span></div>
+        </div>
+        <div class="footer-links">
+          <a href="index.html"><i data-lucide="house"></i> Home</a>
+          <a href="galleria.html"><i data-lucide="images"></i> Galleria</a>
+        </div>
+        <p>© <span id="current-year"></span> Paradiso Lounge Bar</p>
+      </div>
+    </footer>
+
+    <dialog class="event-dialog" id="event-dialog" aria-label="Immagine evento">
+      <button class="icon-button event-dialog-close" type="button" aria-label="Chiudi" title="Chiudi">
+        <i data-lucide="x"></i>
+      </button>
+      <img id="event-dialog-image" src="" alt="" />
+    </dialog>
+  </body>
+</html>

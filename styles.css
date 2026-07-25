@@ -895,6 +895,216 @@ body.gallery-open {
   overflow: hidden;
 }
 
+.events-page {
+  min-height: 100vh;
+}
+
+.events-intro {
+  padding: 104px 0 64px;
+  background: var(--bg);
+}
+
+.events-intro-inner {
+  max-width: 760px;
+}
+
+.events-intro h1 {
+  margin: 8px 0 14px;
+  font: 700 clamp(48px, 7vw, 88px)/0.95 var(--font-display);
+}
+
+.events-intro p:last-child {
+  color: var(--muted);
+  font-size: 18px;
+}
+
+.featured-event {
+  padding: 72px 0;
+  border-block: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.featured-event-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1fr);
+  gap: clamp(42px, 8vw, 110px);
+  align-items: center;
+}
+
+.event-poster-button {
+  position: relative;
+  width: min(100%, 520px);
+  aspect-ratio: 4 / 5;
+  justify-self: center;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #08101a;
+  cursor: zoom-in;
+}
+
+.event-poster-button img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.event-poster-button > span {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 50%;
+  background: rgba(4, 8, 13, 0.7);
+}
+
+.event-poster-button svg {
+  width: 18px;
+  height: 18px;
+}
+
+.featured-event-copy h2 {
+  margin: 10px 0 18px;
+  font: 700 clamp(42px, 6vw, 74px)/0.98 var(--font-display);
+}
+
+.event-lead {
+  max-width: 610px;
+  color: var(--muted);
+  font-size: 18px;
+}
+
+.event-price-row {
+  display: flex;
+  gap: 12px;
+  margin: 28px 0 32px;
+}
+
+.event-price-row span {
+  min-width: 150px;
+  padding: 15px 18px;
+  border-left: 3px solid var(--accent);
+  background: var(--bg);
+}
+
+.event-price-row strong {
+  display: block;
+  margin-top: 3px;
+  font-size: 24px;
+}
+
+.event-actions,
+.events-footer-action {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.event-moments {
+  padding: 104px 0;
+  background: var(--bg);
+}
+
+.event-moments-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 38px;
+}
+
+.event-moment {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.event-moment button {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  display: block;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  background: #08101a;
+  cursor: zoom-in;
+}
+
+.event-moment img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 320ms ease;
+}
+
+.event-moment button:hover img {
+  transform: scale(1.025);
+}
+
+.event-moment > div {
+  padding: 22px;
+}
+
+.event-moment h3 {
+  margin: 0 0 7px;
+  font: 700 25px/1.05 var(--font-display);
+}
+
+.event-moment p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.events-footer-action {
+  justify-content: center;
+  margin-top: 38px;
+}
+
+.event-dialog {
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: #05070b;
+}
+
+.event-dialog[open] {
+  display: grid;
+  place-items: center;
+}
+
+.event-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.88);
+}
+
+.event-dialog img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.event-dialog-close {
+  position: absolute;
+  z-index: 2;
+  top: 14px;
+  right: 14px;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.45);
+  background: rgba(4, 8, 13, 0.72);
+}
+
 .booking-section {
   padding: 104px 0;
   background: var(--surface);
@@ -1602,6 +1812,15 @@ body[data-theme="night"] .map-wrap {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .featured-event-layout {
+    grid-template-columns: minmax(260px, 0.72fr) minmax(0, 1fr);
+    gap: 44px;
+  }
+
+  .event-moments-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .booking-layout {
     grid-template-columns: 1fr 1.15fr;
     gap: 48px;
@@ -1697,8 +1916,38 @@ body[data-theme="night"] .map-wrap {
 
   .menu-section,
   .gallery-section,
-  .booking-section {
+  .booking-section,
+  .event-moments {
     padding: 70px 0;
+  }
+
+  .events-intro {
+    padding: 70px 0 48px;
+  }
+
+  .events-intro h1 {
+    font-size: 54px;
+  }
+
+  .featured-event {
+    padding: 56px 0;
+  }
+
+  .featured-event-layout {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .event-poster-button {
+    max-width: 460px;
+  }
+
+  .featured-event-copy h2 {
+    font-size: 48px;
+  }
+
+  .event-moments-grid {
+    grid-template-columns: 1fr;
   }
 
   .section-heading,
