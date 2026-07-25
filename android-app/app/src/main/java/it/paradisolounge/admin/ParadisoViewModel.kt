@@ -172,10 +172,10 @@ class ParadisoViewModel(application: Application) : AndroidViewModel(application
         )
     }
 
-    fun registerDevice(fid: String, deviceName: String) {
+    fun registerDevice(messagingToken: String, deviceName: String) {
         val token = state.token ?: return
         background(
-            work = { api.registerDevice(token, fid, deviceName) },
+            work = { api.registerDevice(token, messagingToken, deviceName) },
             success = {},
             showLoading = false,
             reportError = false,

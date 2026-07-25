@@ -47,6 +47,19 @@ class ParadisoApplication : Application() {
 }
 
 class ParadisoMessagingService : FirebaseMessagingService() {
+    override fun onNewToken(token: String) {
+        val sessionToken = SecureStorage(applicationContext).readToken() ?: return
+        Thread {
+            runCatching {
+                ApiClient().registerDevice(
+                    sessionToken,
+                    token,
+                    "${Build.MANUFACTURER} ${Build.MODEL}",
+                )
+            }
+        }.start()
+    }
+
     override fun onMessageReceived(message: RemoteMessage) {
         val title = message.notification?.title
             ?: message.data["title"]

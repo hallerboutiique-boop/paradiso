@@ -91,7 +91,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.FirebaseApp
-import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
@@ -188,10 +187,8 @@ private fun ParadisoApp(vm: ParadisoViewModel = viewModel()) {
     LaunchedEffect(state.token) {
         if (state.token != null && FirebaseApp.getApps(context).isNotEmpty()) {
             runCatching {
-                FirebaseMessaging.getInstance().token.addOnSuccessListener {
-                    FirebaseInstallations.getInstance().id.addOnSuccessListener { fid ->
-                        vm.registerDevice(fid, "${Build.MANUFACTURER} ${Build.MODEL}")
-                    }
+                FirebaseMessaging.getInstance().token.addOnSuccessListener { messagingToken ->
+                    vm.registerDevice(messagingToken, "${Build.MANUFACTURER} ${Build.MODEL}")
                 }
             }
         }
