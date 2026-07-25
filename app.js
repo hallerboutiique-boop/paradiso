@@ -297,10 +297,10 @@ const photoReferences = {
     aperitivo: [202, 119, 117, 202, 14, 223, 119, 226, 120],
     servizi: [200, 185, "generated:pizza-compleanno", 69],
     birre: [
-      "assets/images/beer.jpg", "assets/images/beer.jpg", 218, 218, "assets/images/beer.jpg",
-      "assets/images/beer.jpg", "assets/images/beer.jpg", "assets/images/beer.jpg",
-      "assets/images/beer.jpg", "assets/images/beer.jpg", "assets/images/beer.jpg",
-      "assets/images/beer.jpg", "assets/images/beer.jpg", "assets/images/beer.jpg",
+      "assets/images/generated/beers/birra-bottiglia-v2.jpg", "assets/images/generated/beers/birra-spina-v2.jpg", "assets/images/generated/beers/birra-spina-v2.jpg", "assets/images/generated/beers/birra-spina-v2.jpg", "assets/images/generated/beers/birra-lime-v2.jpg",
+      "assets/images/generated/beers/birra-lime-v2.jpg", "assets/images/generated/beers/guinness-v2.jpg", "assets/images/generated/beers/birra-bottiglia-v2.jpg",
+      "assets/images/generated/beers/birra-italiana-v2.jpg", "assets/images/generated/beers/birra-italiana-v2.jpg", "assets/images/generated/beers/birra-italiana-v2.jpg",
+      "assets/images/generated/beers/birra-spina-v2.jpg", "assets/images/generated/beers/paulaner-v2.jpg", "assets/images/generated/beers/birra-bottiglia-v2.jpg",
     ],
     whisky: [
       "assets/images/night-drinks/whisky/ballantines.webp",
