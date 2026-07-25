@@ -564,6 +564,8 @@ const menuSearch = document.querySelector("#menu-search");
 const productSearchInput = document.querySelector("#product-search");
 const productSearchResults = document.querySelector("#product-search-results");
 const productSearchClear = document.querySelector("#product-search-clear");
+const BOOKING_API_URL = "https://paradiso-bookings-api.fly.dev/v1/bookings";
+const BOOKING_EMAIL_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzd0ZEddVWO3gwgnD08PbNH_Yh4D5A1REOhCMGEp75DyxXWaVxxMtZtcQ79geN1mx1s/exec";
 let searchMatches = [];
 let activeSearchIndex = -1;
 
@@ -947,67 +949,65 @@ async function submitBooking(event) {
   submitButton.disabled = true;
   submitButton.setAttribute("aria-busy", "true");
   const data = new FormData(bookingForm);
-  const code = `P-${Date.now().toString().slice(-6)}`;
-  const order = {
-    id: code,
-    createdAt: new Date().toISOString(),
-    customer: {
-      name: data.get("name"),
-      phone: data.get("phone"),
-      email: data.get("email"),
-    },
-    reservation: {
-      date: data.get("date"),
-      time: data.get("time"),
-      guests: Number(data.get("guests")),
-      notes: data.get("notes"),
-    },
+  const request = {
+    customerName: data.get("name"),
+    phone: data.get("phone"),
+    email: data.get("email"),
+    reservationDate: data.get("date"),
+    reservationTime: data.get("time"),
+    guests: Number(data.get("guests")),
+    notes: data.get("notes"),
     items: cart.map(({ id, name, price, quantity }) => ({ id, name, price, quantity })),
-    total: cartTotal(),
-    payment: "Contanti o carta al locale",
-    status: "Nuovo",
   };
 
   try {
-    await fetch("https://script.google.com/macros/s/AKfycbzd0ZEddVWO3gwgnD08PbNH_Yh4D5A1REOhCMGEp75DyxXWaVxxMtZtcQ79geN1mx1s/exec", {
+    const response = await fetch(BOOKING_API_URL, {
       method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "text/plain;charset=UTF-8" },
-      body: JSON.stringify({
-        source: "paradiso-booking-v1",
-        website: "",
-        id: order.id,
-        name: order.customer.name,
-        phone: order.customer.phone,
-        email: order.customer.email,
-        date: order.reservation.date,
-        time: order.reservation.time,
-        guests: order.reservation.guests,
-        notes: order.reservation.notes,
-        items: order.items,
-      }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(request),
     });
-  } catch {
-    showToast("Email non inviata. Controlla la connessione e riprova.");
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      throw new Error(result.error?.message || "Il servizio prenotazioni non è disponibile.");
+    }
+
+    try {
+      await fetch(BOOKING_EMAIL_WEBHOOK_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=UTF-8" },
+        body: JSON.stringify({
+          source: "paradiso-booking-v1",
+          website: "https://hallerboutiique-boop.github.io/paradiso/",
+          id: result.code,
+          name: result.customerName,
+          phone: result.phone,
+          email: result.email,
+          date: result.reservationDate,
+          time: result.reservationTime,
+          guests: result.guests,
+          notes: result.notes,
+          items: result.items,
+        }),
+      });
+    } catch {
+      showToast("Prenotazione salvata. La conferma email potrebbe arrivare in ritardo.");
+    }
+
+    document.querySelector("#confirmation-code").textContent = result.code;
+    document.querySelector("#confirmation-copy").textContent = `${result.customerName}, il tavolo per ${result.guests} ${result.guests === 1 ? "persona" : "persone"} è richiesto per il ${formatDate(result.reservationDate)} alle ${result.reservationTime}.`;
+    confirmationDialog.showModal();
+
+    cart = [];
+    persistCart();
+    bookingForm.reset();
+    setMinDate();
+  } catch (error) {
+    showToast(error.message || "Prenotazione non inviata. Riprova.");
+  } finally {
     submitButton.disabled = false;
     submitButton.removeAttribute("aria-busy");
-    return;
   }
-
-  const orders = readStorage(ORDER_KEY, []);
-  orders.unshift(order);
-  writeStorage(ORDER_KEY, orders);
-
-  document.querySelector("#confirmation-code").textContent = code;
-  document.querySelector("#confirmation-copy").textContent = `${order.customer.name}, il tavolo per ${order.reservation.guests} ${order.reservation.guests === 1 ? "persona" : "persone"} è richiesto per il ${formatDate(order.reservation.date)} alle ${order.reservation.time}.`;
-  confirmationDialog.showModal();
-
-  cart = [];
-  persistCart();
-  bookingForm.reset();
-  setMinDate();
-  submitButton.disabled = false;
-  submitButton.removeAttribute("aria-busy");
 }
 
 function formatDate(value) {
