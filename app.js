@@ -890,6 +890,17 @@ function adjustBookingTime(amount) {
   field.focus();
 }
 
+function adjustBookingGuests(amount) {
+  const field = document.querySelector("#booking-guests");
+  const minimum = Number(field.min) || 1;
+  const maximum = Number(field.max) || 20;
+  const current = Number(field.value) || minimum;
+  field.value = String(Math.min(maximum, Math.max(minimum, current + amount)));
+  field.dispatchEvent(new Event("input", { bubbles: true }));
+  field.dispatchEvent(new Event("change", { bubbles: true }));
+  field.focus();
+}
+
 function refreshIcons() {
   window.lucide?.createIcons({ attrs: { "aria-hidden": "true" } });
 }
@@ -947,6 +958,9 @@ document.querySelector("#checkout-button").addEventListener("click", () => {
 bookingForm.addEventListener("submit", submitBooking);
 document.querySelectorAll("[data-time-step]").forEach((button) => {
   button.addEventListener("click", () => adjustBookingTime(Number(button.dataset.timeStep)));
+});
+document.querySelectorAll("[data-guest-step]").forEach((button) => {
+  button.addEventListener("click", () => adjustBookingGuests(Number(button.dataset.guestStep)));
 });
 document.querySelector(".dialog-close").addEventListener("click", () => confirmationDialog.close());
 document.querySelector(".dialog-done").addEventListener("click", () => confirmationDialog.close());
