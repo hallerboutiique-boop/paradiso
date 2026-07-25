@@ -1,6 +1,7 @@
 package app
 
 import (
+	"bytes"
 	"context"
 	"crypto/sha256"
 	"database/sql"
@@ -503,7 +504,58 @@ func (a *App) createBooking(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, "database_error", "Prenotazione non salvata.")
 		return
 	}
+	if err := a.sendBookingConfirmation(r.Context(), booking); err != nil {
+		a.log.Warn("booking confirmation email not sent", "booking_id", booking.ID, "error", err)
+	}
 	writeJSON(w, http.StatusCreated, booking)
+}
+
+func (a *App) sendBookingConfirmation(parent context.Context, booking Booking) error {
+	if a.cfg.BookingEmailWebhookURL == "" {
+		return nil
+	}
+	payload, err := json.Marshal(map[string]any{
+		"source":  "paradiso-booking-v1",
+		"website": "",
+		"id":      booking.Code,
+		"name":    booking.CustomerName,
+		"phone":   booking.Phone,
+		"email":   booking.Email,
+		"date":    booking.ReservationDate,
+		"time":    booking.ReservationTime,
+		"guests":  booking.Guests,
+		"notes":   booking.Notes,
+		"items":   booking.Items,
+	})
+	if err != nil {
+		return fmt.Errorf("encode confirmation: %w", err)
+	}
+
+	ctx, cancel := context.WithTimeout(parent, 8*time.Second)
+	defer cancel()
+	request, err := http.NewRequestWithContext(ctx, http.MethodPost, a.cfg.BookingEmailWebhookURL, bytes.NewReader(payload))
+	if err != nil {
+		return fmt.Errorf("create confirmation request: %w", err)
+	}
+	request.Header.Set("Content-Type", "text/plain;charset=UTF-8")
+	response, err := http.DefaultClient.Do(request)
+	if err != nil {
+		return fmt.Errorf("send confirmation: %w", err)
+	}
+	defer response.Body.Close()
+	if response.StatusCode < http.StatusOK || response.StatusCode >= http.StatusMultipleChoices {
+		return fmt.Errorf("confirmation service returned %s", response.Status)
+	}
+	var result struct {
+		OK bool `json:"ok"`
+	}
+	if err := json.NewDecoder(io.LimitReader(response.Body, 64<<10)).Decode(&result); err != nil {
+		return fmt.Errorf("decode confirmation response: %w", err)
+	}
+	if !result.OK {
+		return errors.New("confirmation service rejected the request")
+	}
+	return nil
 }
 
 func validateBookingInput(name, phone, email, date, clock string, guests int, notes string, items []BookingItem) string {

@@ -19,6 +19,7 @@ type Config struct {
 	AllowedOrigins          []string
 	FirebaseProjectID       string
 	FirebaseCredentialsJSON string
+	BookingEmailWebhookURL  string
 	TokenTTL                time.Duration
 }
 
@@ -34,6 +35,7 @@ func LoadConfig() (Config, error) {
 		AllowedOrigins:          splitCSV(env("ALLOWED_ORIGINS", "http://localhost:8000,http://127.0.0.1:8000")),
 		FirebaseProjectID:       strings.TrimSpace(os.Getenv("FIREBASE_PROJECT_ID")),
 		FirebaseCredentialsJSON: strings.TrimSpace(os.Getenv("FIREBASE_CREDENTIALS_JSON")),
+		BookingEmailWebhookURL:  strings.TrimSpace(os.Getenv("BOOKING_EMAIL_WEBHOOK_URL")),
 		TokenTTL:                time.Duration(envInt("TOKEN_TTL_HOURS", 12)) * time.Hour,
 	}
 
