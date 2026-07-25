@@ -326,6 +326,23 @@ button {
   margin-top: 32px;
 }
 
+/* The daytime photo carries the visual identity; keep its copy out of the image. */
+body[data-theme="day"] .hero .eyebrow,
+body[data-theme="day"] .hero h1,
+body[data-theme="day"] .hero-copy {
+  display: none;
+}
+
+body[data-theme="day"] .hero-content {
+  width: min(720px, calc(100% - 40px));
+  margin: 0 auto clamp(76px, 10vh, 116px);
+}
+
+body[data-theme="day"] .hero-actions {
+  justify-content: center;
+  margin-top: 0;
+}
+
 .button {
   min-height: 46px;
   display: inline-flex;
@@ -1621,6 +1638,11 @@ body[data-theme="night"] .map-wrap {
   }
 
   .hero-content {
+    width: calc(100% - 36px);
+    margin: 0 18px 72px;
+  }
+
+  body[data-theme="day"] .hero-content {
     width: calc(100% - 36px);
     margin: 0 18px 72px;
   }
