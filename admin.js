@@ -1,47 +1,82 @@
-const ORDER_KEY = "paradiso_orders_v1";
-const ADMIN_PASSWORD = "admin";
+const API_BASE = window.PARADISO_API_BASE_URL ?? "";
+const SESSION_KEY = "paradiso_admin_token";
 const euro = new Intl.NumberFormat("it-IT", { style: "currency", currency: "EUR" });
+const dateTime = new Intl.DateTimeFormat("it-IT", { dateStyle: "short", timeStyle: "short" });
+
+let token = sessionStorage.getItem(SESSION_KEY) || "";
 let orders = [];
+let ledgerEntries = [];
+let pollTimer = null;
 
 const ordersBody = document.querySelector("#orders-body");
 const emptyState = document.querySelector("#admin-empty");
+const ledgerBody = document.querySelector("#ledger-body");
+const ledgerEmpty = document.querySelector("#ledger-empty");
 const searchInput = document.querySelector("#order-search");
 const statusFilter = document.querySelector("#status-filter");
 const orderDialog = document.querySelector("#order-dialog");
 const loginView = document.querySelector("#admin-login");
 const loginForm = document.querySelector("#admin-login-form");
+const emailInput = document.querySelector("#admin-email");
 const passwordInput = document.querySelector("#admin-password");
 const passwordToggle = document.querySelector("#admin-password-toggle");
 const loginError = document.querySelector("#admin-login-error");
 const adminHeader = document.querySelector("#admin-header");
 const adminMain = document.querySelector("#admin-main");
+const ledgerForm = document.querySelector("#ledger-form");
 
-function unlockAdmin() {
+async function api(path, options = {}) {
+  const headers = { ...(options.headers || {}) };
+  if (options.body) headers["Content-Type"] = "application/json";
+  if (token) headers.Authorization = `Bearer ${token}`;
+  const response = await fetch(`${API_BASE}${path}`, { ...options, headers });
+  const result = await response.json().catch(() => ({}));
+  if (response.status === 401 && path !== "/v1/auth/login") {
+    lockAdmin("La sessione è scaduta. Accedi di nuovo.");
+  }
+  if (!response.ok) {
+    const error = new Error(result.error?.message || "Operazione non riuscita.");
+    error.code = result.error?.code;
+    error.status = response.status;
+    throw error;
+  }
+  return result;
+}
+
+async function unlockAdmin() {
   loginError.hidden = true;
   passwordInput.removeAttribute("aria-invalid");
   loginView.hidden = true;
   adminHeader.hidden = false;
   adminMain.hidden = false;
-  orders = readOrders();
-  render();
   window.scrollTo({ top: 0, behavior: "auto" });
-  document.querySelector("#order-search").focus();
+  await refreshAll();
+  clearInterval(pollTimer);
+  pollTimer = window.setInterval(() => loadBookings({ quiet: true }), 30000);
+  searchInput.focus();
 }
 
-function lockAdmin() {
+function lockAdmin(message = "") {
+  clearInterval(pollTimer);
+  pollTimer = null;
+  token = "";
+  sessionStorage.removeItem(SESSION_KEY);
   if (orderDialog.open) orderDialog.close();
   orders = [];
+  ledgerEntries = [];
   ordersBody.innerHTML = "";
+  ledgerBody.innerHTML = "";
   adminHeader.hidden = true;
   adminMain.hidden = true;
   loginView.hidden = false;
   passwordInput.value = "";
   passwordInput.type = "password";
   passwordInput.removeAttribute("aria-invalid");
-  loginError.hidden = true;
+  loginError.textContent = message || "Accesso non riuscito.";
+  loginError.hidden = !message;
   updatePasswordToggle();
   window.scrollTo({ top: 0, behavior: "auto" });
-  passwordInput.focus();
+  emailInput.focus();
 }
 
 function updatePasswordToggle() {
@@ -52,34 +87,62 @@ function updatePasswordToggle() {
   refreshIcons();
 }
 
-function readOrders() {
+async function refreshAll() {
+  const button = document.querySelector("#refresh-data");
+  button.disabled = true;
+  button.querySelector("svg")?.classList.add("is-spinning");
   try {
-    return JSON.parse(localStorage.getItem(ORDER_KEY)) ?? [];
-  } catch {
-    return [];
+    await Promise.all([loadBookings(), loadAccounting()]);
+  } catch (error) {
+    showAdminToast(error.message, true);
+  } finally {
+    button.disabled = false;
+    button.querySelector("svg")?.classList.remove("is-spinning");
   }
 }
 
-function saveOrders() {
-  localStorage.setItem(ORDER_KEY, JSON.stringify(orders));
+async function loadBookings({ quiet = false } = {}) {
+  try {
+    const result = await api("/v1/bookings?limit=300");
+    const hadOrders = orders.length;
+    orders = result.bookings || [];
+    renderOrders();
+    if (quiet && hadOrders && orders.filter(order => order.status === "Nuovo").length > ordersBody.dataset.newCount) {
+      showAdminToast("È arrivata una nuova prenotazione.");
+    }
+    ordersBody.dataset.newCount = String(orders.filter(order => order.status === "Nuovo").length);
+  } catch (error) {
+    if (!quiet) throw error;
+  }
 }
 
-function formatDate(value) {
-  if (!value) return "—";
-  const [year, month, day] = value.split("-");
-  return `${day}/${month}/${year}`;
+async function loadAccounting() {
+  const from = document.querySelector("#accounting-from").value;
+  const to = document.querySelector("#accounting-to").value;
+  const query = new URLSearchParams({ from, to });
+  const [summary, ledger] = await Promise.all([
+    api(`/v1/accounting/summary?${query}`),
+    api(`/v1/accounting/entries?${query}`),
+  ]);
+  ledgerEntries = ledger.entries || [];
+  document.querySelector("#accounting-income").textContent = euro.format(summary.income);
+  document.querySelector("#accounting-expenses").textContent = euro.format(summary.expenses);
+  document.querySelector("#accounting-refunds").textContent = euro.format(summary.refunds);
+  document.querySelector("#accounting-net").textContent = euro.format(summary.net);
+  document.querySelector("#accounting-net").classList.toggle("negative-value", summary.net < 0);
+  renderLedger();
 }
 
 function filteredOrders() {
   const query = searchInput.value.trim().toLowerCase();
   const status = statusFilter.value;
   return orders.filter((order) => {
-    const haystack = `${order.id} ${order.customer.name} ${order.customer.phone} ${order.customer.email ?? ""}`.toLowerCase();
+    const haystack = `${order.code} ${order.customerName} ${order.phone} ${order.email ?? ""}`.toLowerCase();
     return (!query || haystack.includes(query)) && (status === "all" || order.status === status);
   });
 }
 
-function render() {
+function renderOrders() {
   const visible = filteredOrders();
   ordersBody.innerHTML = visible.map(orderRow).join("");
   ordersBody.closest("table").hidden = visible.length === 0;
@@ -92,18 +155,18 @@ function orderRow(order) {
   const itemCount = order.items.reduce((sum, entry) => sum + entry.quantity, 0);
   return `
     <tr>
-      <td><strong>${escapeHtml(order.id)}</strong><span>${formatCreatedAt(order.createdAt)}</span></td>
-      <td><strong>${escapeHtml(order.customer.name)}</strong><span>${escapeHtml(order.customer.phone)}</span></td>
-      <td><strong>${formatDate(order.reservation.date)} · ${escapeHtml(order.reservation.time)}</strong><span>${order.reservation.guests} ${order.reservation.guests === 1 ? "persona" : "persone"}</span></td>
-      <td><strong>${itemCount ? `${itemCount} ${itemCount === 1 ? "prodotto" : "prodotti"}` : "Solo tavolo"}</strong><span>${escapeHtml(order.payment)}</span></td>
-      <td><strong>${euro.format(order.total)}</strong></td>
+      <td><strong>${escapeHtml(order.code)}</strong><span>${formatCreatedAt(order.createdAt)}</span></td>
+      <td><strong>${escapeHtml(order.customerName)}</strong><span>${escapeHtml(order.phone)}</span></td>
+      <td><strong>${formatDate(order.reservationDate)} · ${escapeHtml(order.reservationTime)}</strong><span>${order.guests} ${order.guests === 1 ? "persona" : "persone"}</span></td>
+      <td><strong>${itemCount ? `${itemCount} ${itemCount === 1 ? "prodotto" : "prodotti"}` : "Solo tavolo"}</strong><span>${escapeHtml(order.paymentMethod)}</span></td>
+      <td><strong>${euro.format(order.estimatedTotal)}</strong></td>
       <td>
-        <select class="table-status" data-status-id="${escapeHtml(order.id)}" aria-label="Stato ${escapeHtml(order.id)}">
+        <select class="table-status" data-status-id="${escapeHtml(order.id)}" aria-label="Stato ${escapeHtml(order.code)}">
           ${["Nuovo", "Confermato", "Completato", "Annullato"].map(status => `<option ${order.status === status ? "selected" : ""}>${status}</option>`).join("")}
         </select>
       </td>
       <td>
-        <button class="icon-button row-view" type="button" data-view-id="${escapeHtml(order.id)}" aria-label="Vedi dettagli ${escapeHtml(order.id)}" title="Dettagli">
+        <button class="icon-button row-view" type="button" data-view-id="${escapeHtml(order.id)}" aria-label="Vedi dettagli ${escapeHtml(order.code)}" title="Dettagli">
           <i data-lucide="eye"></i>
         </button>
       </td>
@@ -116,31 +179,51 @@ function renderStats() {
   document.querySelector("#stat-new").textContent = orders.filter(order => order.status === "Nuovo").length;
   document.querySelector("#stat-guests").textContent = orders
     .filter(order => order.status !== "Annullato")
-    .reduce((sum, order) => sum + order.reservation.guests, 0);
+    .reduce((sum, order) => sum + order.guests, 0);
   document.querySelector("#stat-revenue").textContent = euro.format(
-    orders.filter(order => order.status !== "Annullato").reduce((sum, order) => sum + order.total, 0),
+    orders.filter(order => order.status !== "Annullato").reduce((sum, order) => sum + order.estimatedTotal, 0),
   );
+}
+
+function renderLedger() {
+  ledgerBody.innerHTML = ledgerEntries.map(entry => {
+    const sign = entry.kind === "income" ? "+" : "−";
+    const labels = { income: "Incasso", expense: "Spesa", refund: "Rimborso" };
+    return `
+      <tr>
+        <td><strong>${formatDate(entry.occurredOn)}</strong></td>
+        <td><span class="ledger-kind ${entry.kind}">${labels[entry.kind]}</span></td>
+        <td><strong>${escapeHtml(entry.category)}</strong><span>${escapeHtml(entry.paymentMethod || "—")}</span></td>
+        <td><strong>${escapeHtml(entry.description || entry.bookingCode || "—")}</strong>${entry.bookingCode ? `<span>${escapeHtml(entry.bookingCode)}</span>` : ""}</td>
+        <td><strong class="ledger-amount ${entry.kind}">${sign}${euro.format(entry.amount)}</strong></td>
+      </tr>
+    `;
+  }).join("");
+  ledgerBody.closest("table").hidden = ledgerEntries.length === 0;
+  ledgerEmpty.classList.toggle("is-visible", ledgerEntries.length === 0);
+  refreshIcons();
 }
 
 function showOrder(id) {
   const order = orders.find(entry => entry.id === id);
   if (!order) return;
+  const alreadyPaid = ledgerEntries.some(entry => entry.bookingId === order.id && entry.kind === "income");
 
   document.querySelector("#order-detail").innerHTML = `
     <div class="detail-title">
-      <p>${escapeHtml(order.id)} · ${escapeHtml(order.status)}</p>
-      <h2>${escapeHtml(order.customer.name)}</h2>
+      <p>${escapeHtml(order.code)} · ${escapeHtml(order.status)}</p>
+      <h2>${escapeHtml(order.customerName)}</h2>
     </div>
     <div class="detail-grid">
       <section class="detail-block">
         <h3>Contatti</h3>
-        <p>${escapeHtml(order.customer.phone)}</p>
-        <p>${escapeHtml(order.customer.email || "Email non indicata")}</p>
+        <p><a href="tel:${escapeHtml(order.phone)}">${escapeHtml(order.phone)}</a></p>
+        <p><a href="mailto:${escapeHtml(order.email)}">${escapeHtml(order.email || "Email non indicata")}</a></p>
       </section>
       <section class="detail-block">
         <h3>Prenotazione</h3>
-        <p>${formatDate(order.reservation.date)} alle ${escapeHtml(order.reservation.time)}</p>
-        <p>${order.reservation.guests} ${order.reservation.guests === 1 ? "persona" : "persone"}</p>
+        <p>${formatDate(order.reservationDate)} alle ${escapeHtml(order.reservationTime)}</p>
+        <p>${order.guests} ${order.guests === 1 ? "persona" : "persone"}</p>
       </section>
       <section class="detail-block full">
         <h3>Ordine</h3>
@@ -149,11 +232,33 @@ function showOrder(id) {
             ${order.items.map(entry => `<li><span>${entry.quantity} × ${escapeHtml(entry.name)}</span><strong>${euro.format(entry.price * entry.quantity)}</strong></li>`).join("")}
           </ul>
         ` : "<p>Nessun prodotto preordinato.</p>"}
-        <div class="detail-total"><span>Totale</span><strong>${euro.format(order.total)}</strong></div>
+        <div class="detail-total"><span>Totale stimato</span><strong>${euro.format(order.estimatedTotal)}</strong></div>
       </section>
       <section class="detail-block full">
         <h3>Note</h3>
-        <p>${escapeHtml(order.reservation.notes || "Nessuna nota.")}</p>
+        <p>${escapeHtml(order.notes || "Nessuna nota.")}</p>
+      </section>
+      <section class="detail-block full income-block">
+        <h3>Contabilità</h3>
+        ${alreadyPaid ? `
+          <p class="income-recorded"><i data-lucide="circle-check"></i> Incasso già registrato nel libro cassa.</p>
+        ` : `
+          <form id="booking-income-form" data-booking-id="${escapeHtml(order.id)}">
+            <div class="form-row three-columns">
+              <label>Importo
+                <input name="amount" type="number" min="0.01" step="0.01" value="${Number(order.estimatedTotal).toFixed(2)}" required />
+              </label>
+              <label>Metodo
+                <select name="paymentMethod"><option>Contanti</option><option>Carta</option><option>Bonifico</option><option>Altro</option></select>
+              </label>
+              <label>Data
+                <input name="occurredOn" type="date" value="${todayISO()}" required />
+              </label>
+            </div>
+            <p class="form-message" role="status"></p>
+            <button class="button primary" type="submit"><i data-lucide="badge-euro"></i><span>Registra incasso</span></button>
+          </form>
+        `}
       </section>
     </div>
   `;
@@ -161,29 +266,113 @@ function showOrder(id) {
   refreshIcons();
 }
 
-function exportCsv() {
-  if (!orders.length) return;
-  const header = ["Codice", "Creato il", "Nome", "Telefono", "Email", "Data", "Ora", "Persone", "Prodotti", "Totale", "Pagamento", "Stato", "Note"];
+async function updateStatus(select) {
+  const order = orders.find(entry => entry.id === select.dataset.statusId);
+  if (!order) return;
+  const previous = order.status;
+  select.disabled = true;
+  try {
+    await api(`/v1/bookings/${encodeURIComponent(order.id)}/status`, {
+      method: "PATCH",
+      body: JSON.stringify({ status: select.value }),
+    });
+    order.status = select.value;
+    renderStats();
+    showAdminToast(`Stato di ${order.code} aggiornato.`);
+  } catch (error) {
+    select.value = previous;
+    showAdminToast(error.message, true);
+  } finally {
+    select.disabled = false;
+  }
+}
+
+async function registerBookingIncome(form) {
+  const data = new FormData(form);
+  const button = form.querySelector("button[type=submit]");
+  const message = form.querySelector(".form-message");
+  button.disabled = true;
+  message.textContent = "";
+  try {
+    await api(`/v1/accounting/bookings/${encodeURIComponent(form.dataset.bookingId)}/register-income`, {
+      method: "POST",
+      body: JSON.stringify({
+        amount: Number(data.get("amount")),
+        paymentMethod: data.get("paymentMethod"),
+        occurredOn: data.get("occurredOn"),
+      }),
+    });
+    message.textContent = "Incasso registrato.";
+    await loadAccounting();
+    window.setTimeout(() => orderDialog.close(), 500);
+  } catch (error) {
+    message.textContent = error.message;
+    message.classList.add("is-error");
+  } finally {
+    button.disabled = false;
+  }
+}
+
+async function createLedgerEntry(event) {
+  event.preventDefault();
+  const data = new FormData(ledgerForm);
+  const button = ledgerForm.querySelector("button[type=submit]");
+  const message = document.querySelector("#ledger-form-message");
+  button.disabled = true;
+  message.textContent = "";
+  message.classList.remove("is-error");
+  try {
+    await api("/v1/accounting/entries", {
+      method: "POST",
+      body: JSON.stringify({
+        occurredOn: data.get("occurredOn"),
+        kind: data.get("kind"),
+        category: data.get("category"),
+        description: data.get("description"),
+        paymentMethod: data.get("paymentMethod"),
+        amount: Number(data.get("amount")),
+      }),
+    });
+    message.textContent = "Movimento registrato.";
+    ledgerForm.reset();
+    ledgerForm.elements.occurredOn.value = todayISO();
+    await loadAccounting();
+  } catch (error) {
+    message.textContent = error.message;
+    message.classList.add("is-error");
+  } finally {
+    button.disabled = false;
+  }
+}
+
+function exportOrdersCsv() {
+  const header = ["Codice", "Creato il", "Nome", "Telefono", "Email", "Data", "Ora", "Persone", "Prodotti", "Totale stimato", "Pagamento", "Stato", "Note"];
   const rows = orders.map(order => [
-    order.id,
-    formatCreatedAt(order.createdAt),
-    order.customer.name,
-    order.customer.phone,
-    order.customer.email,
-    formatDate(order.reservation.date),
-    order.reservation.time,
-    order.reservation.guests,
+    order.code, formatCreatedAt(order.createdAt), order.customerName, order.phone, order.email,
+    formatDate(order.reservationDate), order.reservationTime, order.guests,
     order.items.map(entry => `${entry.quantity}x ${entry.name}`).join(" | "),
-    order.total.toFixed(2).replace(".", ","),
-    order.payment,
-    order.status,
-    order.reservation.notes,
+    Number(order.estimatedTotal).toFixed(2).replace(".", ","), order.paymentMethod, order.status, order.notes,
   ]);
-  const csv = [header, ...rows].map(row => row.map(csvCell).join(";")).join("\n");
+  downloadCsv(`paradiso-prenotazioni-${todayISO()}.csv`, [header, ...rows]);
+}
+
+function exportLedgerCsv() {
+  const labels = { income: "Incasso", expense: "Spesa", refund: "Rimborso" };
+  const header = ["Data", "Tipo", "Categoria", "Descrizione", "Metodo", "Importo", "Prenotazione"];
+  const rows = ledgerEntries.map(entry => [
+    formatDate(entry.occurredOn), labels[entry.kind], entry.category, entry.description,
+    entry.paymentMethod, Number(entry.amount).toFixed(2).replace(".", ","), entry.bookingCode || "",
+  ]);
+  downloadCsv(`paradiso-contabilita-${todayISO()}.csv`, [header, ...rows]);
+}
+
+function downloadCsv(filename, rows) {
+  if (rows.length <= 1) return;
+  const csv = rows.map(row => row.map(csvCell).join(";")).join("\n");
   const blob = new Blob(["\uFEFF", csv], { type: "text/csv;charset=utf-8" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
-  link.download = `paradiso-ordini-${new Date().toISOString().slice(0, 10)}.csv`;
+  link.download = filename;
   link.click();
   URL.revokeObjectURL(link.href);
 }
@@ -192,8 +381,33 @@ function csvCell(value) {
   return `"${String(value ?? "").replaceAll('"', '""')}"`;
 }
 
+function switchView(name) {
+  document.querySelectorAll("[data-admin-view]").forEach(button => {
+    const active = button.dataset.adminView === name;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+  document.querySelectorAll("[data-view-panel]").forEach(panel => {
+    panel.hidden = panel.dataset.viewPanel !== name;
+  });
+  document.querySelector("#export-orders").hidden = name !== "bookings";
+  if (name === "accounting") loadAccounting().catch(error => showAdminToast(error.message, true));
+}
+
+function formatDate(value) {
+  if (!value) return "—";
+  const [year, month, day] = value.split("-");
+  return `${day}/${month}/${year}`;
+}
+
 function formatCreatedAt(value) {
-  return new Intl.DateTimeFormat("it-IT", { dateStyle: "short", timeStyle: "short" }).format(new Date(value));
+  return dateTime.format(new Date(value));
+}
+
+function todayISO() {
+  const now = new Date();
+  const offset = now.getTimezoneOffset() * 60000;
+  return new Date(now.getTime() - offset).toISOString().slice(0, 10);
 }
 
 function escapeHtml(value) {
@@ -206,14 +420,23 @@ function refreshIcons() {
   window.lucide?.createIcons({ attrs: { "aria-hidden": "true" } });
 }
 
+function showAdminToast(message, isError = false) {
+  document.querySelector(".admin-toast")?.remove();
+  const toast = document.createElement("div");
+  toast.className = `admin-toast${isError ? " is-error" : ""}`;
+  toast.setAttribute("role", "status");
+  toast.textContent = message;
+  document.body.append(toast);
+  requestAnimationFrame(() => toast.classList.add("is-visible"));
+  window.setTimeout(() => {
+    toast.classList.remove("is-visible");
+    window.setTimeout(() => toast.remove(), 250);
+  }, 2500);
+}
+
 ordersBody.addEventListener("change", event => {
   const select = event.target.closest("[data-status-id]");
-  if (!select) return;
-  const order = orders.find(entry => entry.id === select.dataset.statusId);
-  if (!order) return;
-  order.status = select.value;
-  saveOrders();
-  render();
+  if (select) updateStatus(select);
 });
 
 ordersBody.addEventListener("click", event => {
@@ -221,26 +444,46 @@ ordersBody.addEventListener("click", event => {
   if (button) showOrder(button.dataset.viewId);
 });
 
-searchInput.addEventListener("input", render);
-statusFilter.addEventListener("change", render);
-document.querySelector("#export-orders").addEventListener("click", exportCsv);
-document.querySelector("#clear-orders").addEventListener("click", () => {
-  if (!orders.length || !window.confirm("Eliminare tutte le prenotazioni salvate su questo dispositivo?")) return;
-  orders = [];
-  saveOrders();
-  render();
-});
-document.querySelector(".order-dialog-close").addEventListener("click", () => orderDialog.close());
-loginForm.addEventListener("submit", event => {
+document.querySelector("#order-detail").addEventListener("submit", event => {
+  const form = event.target.closest("#booking-income-form");
+  if (!form) return;
   event.preventDefault();
-  if (passwordInput.value === ADMIN_PASSWORD) {
-    unlockAdmin();
-    return;
-  }
-  loginError.hidden = false;
-  passwordInput.setAttribute("aria-invalid", "true");
-  passwordInput.select();
+  registerBookingIncome(form);
 });
+
+searchInput.addEventListener("input", renderOrders);
+statusFilter.addEventListener("change", renderOrders);
+document.querySelector("#export-orders").addEventListener("click", exportOrdersCsv);
+document.querySelector("#export-ledger").addEventListener("click", exportLedgerCsv);
+document.querySelector("#refresh-data").addEventListener("click", refreshAll);
+document.querySelectorAll("[data-admin-view]").forEach(button => button.addEventListener("click", () => switchView(button.dataset.adminView)));
+document.querySelectorAll("#accounting-from, #accounting-to").forEach(input => input.addEventListener("change", () => loadAccounting().catch(error => showAdminToast(error.message, true))));
+ledgerForm.addEventListener("submit", createLedgerEntry);
+document.querySelector(".order-dialog-close").addEventListener("click", () => orderDialog.close());
+
+loginForm.addEventListener("submit", async event => {
+  event.preventDefault();
+  const button = loginForm.querySelector("button[type=submit]");
+  button.disabled = true;
+  loginError.hidden = true;
+  try {
+    const result = await api("/v1/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ email: emailInput.value, password: passwordInput.value }),
+    });
+    token = result.token;
+    sessionStorage.setItem(SESSION_KEY, token);
+    await unlockAdmin();
+  } catch (error) {
+    loginError.textContent = error.message;
+    loginError.hidden = false;
+    passwordInput.setAttribute("aria-invalid", "true");
+    passwordInput.select();
+  } finally {
+    button.disabled = false;
+  }
+});
+
 passwordInput.addEventListener("input", () => {
   loginError.hidden = true;
   passwordInput.removeAttribute("aria-invalid");
@@ -250,7 +493,14 @@ passwordToggle.addEventListener("click", () => {
   updatePasswordToggle();
   passwordInput.focus();
 });
-document.querySelector("#lock-admin").addEventListener("click", lockAdmin);
+document.querySelector("#lock-admin").addEventListener("click", () => lockAdmin());
 
+const now = new Date();
+document.querySelector("#accounting-from").value = new Date(now.getFullYear(), now.getMonth(), 1, 12).toISOString().slice(0, 10);
+document.querySelector("#accounting-to").value = todayISO();
+ledgerForm.elements.occurredOn.value = todayISO();
 refreshIcons();
-window.addEventListener("load", refreshIcons);
+
+if (token) {
+  api("/v1/me").then(unlockAdmin).catch(() => lockAdmin("La sessione è scaduta. Accedi di nuovo."));
+}

@@ -1,1 +1,11 @@
 .DS_Store
+.idea/
+*.iml
+*.jks
+*.keystore
+local.properties
+android-app/.gradle/
+android-app/**/build/
+android-app/app/google-services.json
+backend/.env
+coverage.out

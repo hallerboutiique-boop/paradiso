@@ -1,6 +1,5 @@
 const euro = new Intl.NumberFormat("it-IT", { style: "currency", currency: "EUR" });
 const CART_KEY = "paradiso_cart_v1";
-const ORDER_KEY = "paradiso_orders_v1";
 const THEME_KEY = "paradiso_theme";
 
 const image = (name) => `assets/images/${name}.jpg`;
@@ -532,6 +531,7 @@ const allNightDrinkProducts = ["cocktail", ...detailedDrinkCategories]
   .flatMap((categoryKey) => menus.night.categories[categoryKey].items);
 const drinkDescriptions = allNightDrinkProducts.map((product) => product.description);
 const drinkFacts = allNightDrinkProducts.map((product) => product.fact);
+const API_BASE = window.PARADISO_API_BASE_URL ?? "";
 
 if (allNightDrinkProducts.some((product) => !product.description || !product.fact)) {
   throw new Error("Una bevanda del menu notte non ha ingredienti o chicca.");
@@ -818,42 +818,48 @@ function showToast(message) {
   }, 1800);
 }
 
-function submitBooking(event) {
+async function submitBooking(event) {
   event.preventDefault();
+  const submitButton = bookingForm.querySelector(".submit-button");
+  submitButton.disabled = true;
+  submitButton.setAttribute("aria-busy", "true");
   const data = new FormData(bookingForm);
-  const code = `P-${Date.now().toString().slice(-6)}`;
-  const order = {
-    id: code,
-    createdAt: new Date().toISOString(),
-    customer: {
-      name: data.get("name"),
-      phone: data.get("phone"),
-      email: data.get("email"),
-    },
-    reservation: {
-      date: data.get("date"),
-      time: data.get("time"),
-      guests: Number(data.get("guests")),
-      notes: data.get("notes"),
-    },
+  const request = {
+    customerName: data.get("name"),
+    phone: data.get("phone"),
+    email: data.get("email"),
+    reservationDate: data.get("date"),
+    reservationTime: data.get("time"),
+    guests: Number(data.get("guests")),
+    notes: data.get("notes"),
     items: cart.map(({ id, name, price, quantity }) => ({ id, name, price, quantity })),
-    total: cartTotal(),
-    payment: "Contanti o carta al locale",
-    status: "Nuovo",
   };
 
-  const orders = readStorage(ORDER_KEY, []);
-  orders.unshift(order);
-  writeStorage(ORDER_KEY, orders);
+  try {
+    const response = await fetch(`${API_BASE}/v1/bookings`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(request),
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      throw new Error(result.error?.message || "Il servizio prenotazioni non è disponibile.");
+    }
 
-  document.querySelector("#confirmation-code").textContent = code;
-  document.querySelector("#confirmation-copy").textContent = `${order.customer.name}, il tavolo per ${order.reservation.guests} ${order.reservation.guests === 1 ? "persona" : "persone"} è richiesto per il ${formatDate(order.reservation.date)} alle ${order.reservation.time}.`;
-  confirmationDialog.showModal();
+    document.querySelector("#confirmation-code").textContent = result.code;
+    document.querySelector("#confirmation-copy").textContent = `${result.customerName}, il tavolo per ${result.guests} ${result.guests === 1 ? "persona" : "persone"} è richiesto per il ${formatDate(result.reservationDate)} alle ${result.reservationTime}.`;
+    confirmationDialog.showModal();
 
-  cart = [];
-  persistCart();
-  bookingForm.reset();
-  setMinDate();
+    cart = [];
+    persistCart();
+    bookingForm.reset();
+    setMinDate();
+  } catch (error) {
+    showToast(error.message || "Prenotazione non inviata. Riprova.");
+  } finally {
+    submitButton.disabled = false;
+    submitButton.removeAttribute("aria-busy");
+  }
 }
 
 function formatDate(value) {

@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0b111a" />
-    <title>Dashboard ordini | Paradiso</title>
+    <title>Gestione prenotazioni e contabilità | Paradiso</title>
     <link rel="preconnect" href="https://unpkg.com" />
     <link rel="stylesheet" href="styles.css?v=20260724-9" />
-    <link rel="stylesheet" href="admin.css?v=20260724-1" />
+    <link rel="stylesheet" href="admin.css?v=20260726-1" />
     <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
-    <script src="admin.js?v=20260724-1" defer></script>
+    <script src="admin.js?v=20260726-1" defer></script>
   </head>
   <body class="admin-body" data-theme="night">
     <main class="admin-login" id="admin-login">
@@ -21,16 +21,18 @@
         <div class="admin-login-icon"><i data-lucide="lock-keyhole"></i></div>
         <p class="eyebrow">Area riservata</p>
         <h1 id="admin-login-title">Accesso amministratore</h1>
-        <p>Inserisci la password per visualizzare prenotazioni e ordini.</p>
+        <p>Accedi per gestire prenotazioni, incassi e spese.</p>
         <form class="admin-login-form" id="admin-login-form">
+          <label for="admin-email">Email</label>
+          <input id="admin-email" name="email" type="email" autocomplete="username" required placeholder="admin@paradiso.it" autofocus />
           <label for="admin-password">Password</label>
           <div class="admin-password-field">
-            <input id="admin-password" name="password" type="password" autocomplete="current-password" required autofocus />
+            <input id="admin-password" name="password" type="password" autocomplete="current-password" required />
             <button class="admin-password-toggle" id="admin-password-toggle" type="button" aria-label="Mostra password" title="Mostra password">
               <i data-lucide="eye"></i>
             </button>
           </div>
-          <p class="admin-login-error" id="admin-login-error" role="alert" hidden>Password non corretta.</p>
+          <p class="admin-login-error" id="admin-login-error" role="alert" hidden>Accesso non riuscito.</p>
           <button class="button primary admin-login-submit" type="submit">
             <span>Accedi</span>
             <i data-lucide="arrow-right"></i>
@@ -50,7 +52,7 @@
       </a>
       <div class="admin-header-copy">
         <strong>Dashboard</strong>
-        <span>Prenotazioni e ordini</span>
+        <span>Prenotazioni e contabilità</span>
       </div>
       <div class="admin-header-actions">
         <button class="icon-button" id="lock-admin" type="button" aria-label="Blocca area admin" title="Blocca area admin">
@@ -67,77 +69,185 @@
       <section class="admin-title-row">
         <div>
           <p class="eyebrow">Area riservata</p>
-          <h1>Ordini e prenotazioni</h1>
-          <p>I dati inseriti dal sito sono disponibili su questo dispositivo.</p>
+          <h1>Gestione Paradiso</h1>
+          <p>Dati sincronizzati in tempo reale con l’API Fly.</p>
         </div>
         <div class="admin-actions">
+          <button class="button outline" id="refresh-data" type="button">
+            <i data-lucide="refresh-cw"></i>
+            <span>Aggiorna</span>
+          </button>
           <button class="button outline" id="export-orders" type="button">
             <i data-lucide="download"></i>
             <span>Esporta CSV</span>
           </button>
-          <button class="icon-button danger-button" id="clear-orders" type="button" title="Elimina tutti gli ordini" aria-label="Elimina tutti gli ordini">
-            <i data-lucide="trash-2"></i>
-          </button>
         </div>
       </section>
 
-      <section class="stats-grid" aria-label="Riepilogo">
-        <article class="stat-card">
-          <div><span>Totale richieste</span><strong id="stat-total">0</strong></div>
-          <i data-lucide="clipboard-list"></i>
-        </article>
-        <article class="stat-card">
-          <div><span>Nuove</span><strong id="stat-new">0</strong></div>
-          <i data-lucide="bell"></i>
-        </article>
-        <article class="stat-card">
-          <div><span>Ospiti attesi</span><strong id="stat-guests">0</strong></div>
-          <i data-lucide="users"></i>
-        </article>
-        <article class="stat-card">
-          <div><span>Valore ordini</span><strong id="stat-revenue">€ 0,00</strong></div>
-          <i data-lucide="banknote"></i>
-        </article>
-      </section>
+      <nav class="admin-tabs" aria-label="Sezioni">
+        <button class="admin-tab is-active" type="button" data-admin-view="bookings" aria-pressed="true">
+          <i data-lucide="calendar-check"></i><span>Prenotazioni</span>
+        </button>
+        <button class="admin-tab" type="button" data-admin-view="accounting" aria-pressed="false">
+          <i data-lucide="landmark"></i><span>Contabilità</span>
+        </button>
+      </nav>
 
-      <section class="orders-panel">
-        <div class="orders-toolbar">
-          <label class="search-field">
-            <i data-lucide="search"></i>
-            <input id="order-search" type="search" placeholder="Cerca nome, telefono o codice" />
-          </label>
-          <label class="status-filter">
-            <span>Stato</span>
-            <select id="status-filter">
-              <option value="all">Tutti</option>
-              <option>Nuovo</option>
-              <option>Confermato</option>
-              <option>Completato</option>
-              <option>Annullato</option>
-            </select>
-          </label>
-        </div>
+      <section id="bookings-view" data-view-panel="bookings">
+        <section class="stats-grid" aria-label="Riepilogo prenotazioni">
+          <article class="stat-card">
+            <div><span>Totale richieste</span><strong id="stat-total">0</strong></div>
+            <i data-lucide="clipboard-list"></i>
+          </article>
+          <article class="stat-card">
+            <div><span>Nuove</span><strong id="stat-new">0</strong></div>
+            <i data-lucide="bell"></i>
+          </article>
+          <article class="stat-card">
+            <div><span>Ospiti attesi</span><strong id="stat-guests">0</strong></div>
+            <i data-lucide="users"></i>
+          </article>
+          <article class="stat-card">
+            <div><span>Valore stimato</span><strong id="stat-revenue">€ 0,00</strong></div>
+            <i data-lucide="banknote"></i>
+          </article>
+        </section>
 
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Codice</th>
-                <th>Cliente</th>
-                <th>Prenotazione</th>
-                <th>Ordine</th>
-                <th>Totale</th>
-                <th>Stato</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody id="orders-body"></tbody>
-          </table>
-          <div class="admin-empty" id="admin-empty">
-            <i data-lucide="inbox"></i>
-            <h2>Nessuna prenotazione</h2>
-            <p>Le nuove richieste compariranno qui.</p>
+        <section class="orders-panel">
+          <div class="orders-toolbar">
+            <label class="search-field">
+              <i data-lucide="search"></i>
+              <input id="order-search" type="search" placeholder="Cerca nome, telefono o codice" />
+            </label>
+            <label class="status-filter">
+              <span>Stato</span>
+              <select id="status-filter">
+                <option value="all">Tutti</option>
+                <option>Nuovo</option>
+                <option>Confermato</option>
+                <option>Completato</option>
+                <option>Annullato</option>
+              </select>
+            </label>
           </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Codice</th>
+                  <th>Cliente</th>
+                  <th>Prenotazione</th>
+                  <th>Ordine</th>
+                  <th>Totale</th>
+                  <th>Stato</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="orders-body"></tbody>
+            </table>
+            <div class="admin-empty" id="admin-empty">
+              <i data-lucide="inbox"></i>
+              <h2>Nessuna prenotazione</h2>
+              <p>Le nuove richieste compariranno qui.</p>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section id="accounting-view" data-view-panel="accounting" hidden>
+        <div class="accounting-toolbar">
+          <div>
+            <p class="eyebrow">Libro cassa</p>
+            <h2>Contabilità</h2>
+          </div>
+          <div class="date-range">
+            <label>Dal <input id="accounting-from" type="date" /></label>
+            <label>Al <input id="accounting-to" type="date" /></label>
+          </div>
+        </div>
+
+        <section class="stats-grid accounting-stats" aria-label="Riepilogo contabile">
+          <article class="stat-card positive">
+            <div><span>Incassi</span><strong id="accounting-income">€ 0,00</strong></div>
+            <i data-lucide="trending-up"></i>
+          </article>
+          <article class="stat-card negative">
+            <div><span>Spese</span><strong id="accounting-expenses">€ 0,00</strong></div>
+            <i data-lucide="trending-down"></i>
+          </article>
+          <article class="stat-card negative">
+            <div><span>Rimborsi</span><strong id="accounting-refunds">€ 0,00</strong></div>
+            <i data-lucide="undo-2"></i>
+          </article>
+          <article class="stat-card net-card">
+            <div><span>Saldo netto</span><strong id="accounting-net">€ 0,00</strong></div>
+            <i data-lucide="wallet-cards"></i>
+          </article>
+        </section>
+
+        <div class="accounting-layout">
+          <section class="ledger-form-panel">
+            <p class="eyebrow">Nuovo movimento</p>
+            <h3>Registra in cassa</h3>
+            <form id="ledger-form">
+              <div class="form-row two-columns">
+                <label>Tipo
+                  <select name="kind" required>
+                    <option value="income">Incasso</option>
+                    <option value="expense">Spesa</option>
+                    <option value="refund">Rimborso</option>
+                  </select>
+                </label>
+                <label>Importo
+                  <input name="amount" type="number" min="0.01" step="0.01" required placeholder="0,00" />
+                </label>
+              </div>
+              <div class="form-row two-columns">
+                <label>Data
+                  <input name="occurredOn" type="date" required />
+                </label>
+                <label>Metodo
+                  <select name="paymentMethod">
+                    <option>Contanti</option>
+                    <option>Carta</option>
+                    <option>Bonifico</option>
+                    <option>Altro</option>
+                  </select>
+                </label>
+              </div>
+              <label>Categoria
+                <input name="category" required maxlength="80" placeholder="Fornitori, personale, bar…" />
+              </label>
+              <label>Descrizione
+                <textarea name="description" rows="3" maxlength="300" placeholder="Dettaglio facoltativo"></textarea>
+              </label>
+              <p class="form-message" id="ledger-form-message" role="status"></p>
+              <button class="button primary" type="submit">
+                <i data-lucide="plus"></i><span>Registra movimento</span>
+              </button>
+            </form>
+          </section>
+
+          <section class="orders-panel ledger-panel">
+            <div class="ledger-heading">
+              <div><p class="eyebrow">Movimenti</p><h3>Registro</h3></div>
+              <button class="button outline" id="export-ledger" type="button">
+                <i data-lucide="download"></i><span>Esporta CSV</span>
+              </button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Data</th><th>Tipo</th><th>Categoria</th><th>Dettaglio</th><th>Importo</th></tr></thead>
+                <tbody id="ledger-body"></tbody>
+              </table>
+              <div class="admin-empty" id="ledger-empty">
+                <i data-lucide="receipt-text"></i>
+                <h2>Nessun movimento</h2>
+                <p>Registra il primo incasso o costo del periodo.</p>
+              </div>
+            </div>
+          </section>
         </div>
       </section>
     </main>

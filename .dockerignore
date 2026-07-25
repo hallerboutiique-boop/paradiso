@@ -1,0 +1,7 @@
+.git
+.github
+.idea
+android-app
+backend/.env
+backend/coverage.out
+*.md
