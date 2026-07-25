@@ -10,7 +10,7 @@
     <meta name="theme-color" content="#f5fbff" />
     <title>Paradiso | Lounge Bar Nova Milanese</title>
     <link rel="preconnect" href="https://unpkg.com" />
-    <link rel="stylesheet" href="styles.css?v=20260726-1" />
+    <link rel="stylesheet" href="styles.css?v=20260726-2" />
     <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
     <script src="drink-profiles.js?v=20260725-1" defer></script>
     <script src="app.js?v=20260726-5" defer></script>
@@ -153,6 +153,41 @@
                 <span>Notte</span>
               </button>
             </div>
+          </div>
+
+          <div class="menu-search" id="menu-search">
+            <div class="menu-search-field">
+              <i data-lucide="search"></i>
+              <input
+                id="product-search"
+                type="search"
+                role="combobox"
+                autocomplete="off"
+                aria-label="Cerca prodotti nel menu"
+                aria-autocomplete="list"
+                aria-expanded="false"
+                aria-controls="product-search-results"
+                placeholder="Cerca nel menu del giorno"
+              />
+              <button
+                class="menu-search-clear"
+                id="product-search-clear"
+                type="button"
+                aria-label="Cancella ricerca"
+                title="Cancella ricerca"
+                hidden
+              >
+                <i data-lucide="x"></i>
+              </button>
+            </div>
+            <div
+              class="menu-search-results"
+              id="product-search-results"
+              role="listbox"
+              aria-label="Risultati della ricerca"
+              aria-live="polite"
+              hidden
+            ></div>
           </div>
 
           <div class="category-tabs" id="category-tabs" role="tablist" aria-label="Categorie del menu"></div>
