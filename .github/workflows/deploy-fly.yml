@@ -1,0 +1,22 @@
+name: Deploy site and API to Fly
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: paradiso-fly-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - name: Deploy the unified site and API container
+        run: flyctl deploy --remote-only --config backend/fly.toml --dockerfile backend/Dockerfile
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
