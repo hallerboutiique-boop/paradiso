@@ -3,6 +3,8 @@ package it.paradisolounge.admin
 import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 class ApiException(val status: Int, message: String) : Exception(message)
 
@@ -22,6 +24,19 @@ class ApiClient(private val baseUrl: String = BuildConfig.API_BASE_URL) {
         val result = request("GET", "/v1/bookings?limit=300", token = token)
         val array = result.optJSONArray("bookings") ?: return emptyList()
         return List(array.length()) { array.getJSONObject(it).toBooking() }
+    }
+
+    fun bookingByCode(token: String, code: String): Booking {
+        val encoded = URLEncoder.encode(code, StandardCharsets.UTF_8.name())
+        val result = request("GET", "/v1/bookings?q=$encoded&limit=10", token = token)
+        val array = result.optJSONArray("bookings")
+        val bookings = if (array == null) {
+            emptyList()
+        } else {
+            List(array.length()) { array.getJSONObject(it).toBooking() }
+        }
+        return bookings.firstOrNull { it.code.equals(code, ignoreCase = true) }
+            ?: throw ApiException(404, "Prenotazione $code non trovata.")
     }
 
     fun updateBookingStatus(token: String, bookingId: String, status: String) {

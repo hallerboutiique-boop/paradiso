@@ -70,6 +70,41 @@ class ParadisoViewModel(application: Application) : AndroidViewModel(application
         state = state.copy(statusFilter = status)
     }
 
+    fun openBookingFromQr(rawValue: String) {
+        val code = extractBookingCode(rawValue)
+        if (code == null) {
+            notice("QR non valido: il codice prenotazione non è stato riconosciuto.", true)
+            return
+        }
+        val token = state.token ?: return
+        state = state.copy(isLoading = true)
+        background(
+            work = { api.bookingByCode(token, code) },
+            success = { booking ->
+                val updatedBookings = state.bookings
+                    .filterNot { it.id == booking.id }
+                    .toMutableList()
+                    .apply { add(0, booking) }
+                state = state.copy(
+                    isLoading = false,
+                    bookings = updatedBookings,
+                    selectedSection = Section.BOOKINGS,
+                    statusFilter = "Tutti",
+                    scannedBooking = booking,
+                )
+                notice("${booking.code}: prenotazione trovata.")
+            },
+        )
+    }
+
+    fun consumeScannedBooking() {
+        state = state.copy(scannedBooking = null)
+    }
+
+    fun scannerUnavailable() {
+        notice("Lettore QR non disponibile. Controlla Google Play Services e riprova.", true)
+    }
+
     fun updateStatus(booking: Booking, status: String) {
         val token = state.token ?: return
         state = state.copy(isLoading = true)

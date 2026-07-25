@@ -55,6 +55,7 @@ data class AppState(
     val summary: AccountingSummary = AccountingSummary(),
     val selectedSection: Section = Section.BOOKINGS,
     val statusFilter: String = "Tutti",
+    val scannedBooking: Booking? = null,
     val notice: String? = null,
     val noticeIsError: Boolean = false,
 )

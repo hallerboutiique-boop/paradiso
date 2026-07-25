@@ -29,6 +29,7 @@ App Android ─────┘                         │
 - contabilità con incassi, spese, rimborsi, categorie e saldo netto;
 - registrazione dell'incasso reale collegato a una prenotazione;
 - app Android nativa con le stesse funzioni amministrative;
+- lettura del QR ricevuto dal cliente per aprire e gestire subito la prenotazione;
 - notifica push alla creazione di una prenotazione;
 - build APK scaricabile dagli artifact GitHub o dalle release `android-v*`.
 
@@ -118,6 +119,14 @@ Se il nome Fly viene cambiato, aggiornare:
 5. Per abilitare FCM anche nelle build GitHub Actions, salvare il contenuto base64 di `google-services.json` nel secret repository facoltativo `GOOGLE_SERVICES_JSON_BASE64`.
 
 Senza questi valori l'app e l'API continuano a funzionare, ma il push resta disabilitato.
+
+## Lettore QR Android
+
+Nella sezione Prenotazioni, toccare **Scansiona QR prenotazione** e inquadrare il
+QR della conferma ricevuta dal cliente. L'app estrae il codice `P-XXXXXXXX`,
+recupera la prenotazione dall'API e apre direttamente la scheda da cui aggiornare
+lo stato o registrare l'incasso. La scansione usa Google Code Scanner e non
+richiede il permesso fotocamera all'app.
 
 ## Deploy e APK da GitHub
 

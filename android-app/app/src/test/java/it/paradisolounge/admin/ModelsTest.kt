@@ -2,6 +2,7 @@ package it.paradisolounge.admin
 
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 
 class ModelsTest {
@@ -32,5 +33,25 @@ class ModelsTest {
         assertEquals(4, booking.guests)
         assertEquals(1, booking.items.size)
         assertEquals(16.0, booking.estimatedTotal, 0.001)
+    }
+
+    @Test
+    fun bookingCodeIsExtractedFromQrPayloads() {
+        assertEquals("P-ABC12345", extractBookingCode("P-ABC12345"))
+        assertEquals(
+            "P-ABC12345",
+            extractBookingCode("https://paradiso.example/prenotazione?code=P%2Dabc12345"),
+        )
+        assertEquals(
+            "P-ABC12345",
+            extractBookingCode("""{"id":"P-abc12345","source":"paradiso-booking-v1"}"""),
+        )
+    }
+
+    @Test
+    fun invalidQrPayloadHasNoBookingCode() {
+        assertNull(extractBookingCode("https://example.com/altro"))
+        assertNull(extractBookingCode(""))
+        assertNull(extractBookingCode("P-TOO-SHORT"))
     }
 }

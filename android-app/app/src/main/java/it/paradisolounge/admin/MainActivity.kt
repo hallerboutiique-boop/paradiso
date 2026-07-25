@@ -39,6 +39,7 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.People
+import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.RestaurantMenu
 import androidx.compose.material.icons.filled.TrendingDown
@@ -92,6 +93,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.FirebaseApp
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.android.gms.codescanner.GmsBarcodeScannerOptions
+import com.google.android.gms.codescanner.GmsBarcodeScanning
+import com.google.mlkit.vision.barcode.common.Barcode
 import java.text.NumberFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -151,6 +155,23 @@ private fun ParadisoApp(vm: ParadisoViewModel = viewModel()) {
     val context = LocalContext.current
     var selectedBooking by remember { mutableStateOf<Booking?>(null) }
     var showLedgerDialog by remember { mutableStateOf(false) }
+    val qrScanner = remember(context) {
+        val options = GmsBarcodeScannerOptions.Builder()
+            .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
+            .enableAutoZoom()
+            .build()
+        GmsBarcodeScanning.getClient(context, options)
+    }
+    val startQrScanner = {
+        qrScanner.startScan()
+            .addOnSuccessListener { barcode ->
+                vm.openBookingFromQr(barcode.rawValue.orEmpty())
+            }
+            .addOnFailureListener {
+                vm.scannerUnavailable()
+            }
+        Unit
+    }
 
     val notificationPermission = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission(),
@@ -183,6 +204,13 @@ private fun ParadisoApp(vm: ParadisoViewModel = viewModel()) {
         }
     }
 
+    LaunchedEffect(state.scannedBooking?.id) {
+        state.scannedBooking?.let {
+            selectedBooking = it
+            vm.consumeScannedBooking()
+        }
+    }
+
     when {
         state.isRestoringSession -> LoadingScreen()
         state.token == null -> Scaffold(snackbarHost = { SnackbarHost(snackbar) }) { padding ->
@@ -209,6 +237,9 @@ private fun ParadisoApp(vm: ParadisoViewModel = viewModel()) {
                         }
                     },
                     actions = {
+                        IconButton(onClick = startQrScanner) {
+                            Icon(Icons.Default.QrCodeScanner, contentDescription = "Scansiona QR prenotazione")
+                        }
                         IconButton(onClick = vm::refresh) {
                             Icon(Icons.Default.Refresh, contentDescription = "Aggiorna")
                         }
@@ -250,6 +281,7 @@ private fun ParadisoApp(vm: ParadisoViewModel = viewModel()) {
                         state = state,
                         onFilter = vm::setStatusFilter,
                         onBooking = { selectedBooking = it },
+                        onScan = startQrScanner,
                     )
                     Section.ACCOUNTING -> AccountingScreen(state)
                 }
@@ -369,6 +401,7 @@ private fun BookingsScreen(
     state: AppState,
     onFilter: (String) -> Unit,
     onBooking: (Booking) -> Unit,
+    onScan: () -> Unit,
 ) {
     val filtered = if (state.statusFilter == "Tutti") {
         state.bookings
@@ -383,6 +416,12 @@ private fun BookingsScreen(
         item {
             Text("Prenotazioni", style = MaterialTheme.typography.headlineMedium)
             Text("Sincronizzate con il sito Paradiso", color = TextMuted)
+            Spacer(Modifier.height(14.dp))
+            OutlinedButton(onClick = onScan, modifier = Modifier.fillMaxWidth()) {
+                Icon(Icons.Default.QrCodeScanner, contentDescription = null)
+                Spacer(Modifier.width(8.dp))
+                Text("Scansiona QR prenotazione", fontWeight = FontWeight.Bold)
+            }
             Spacer(Modifier.height(18.dp))
             BookingStats(state.bookings)
             Spacer(Modifier.height(18.dp))
