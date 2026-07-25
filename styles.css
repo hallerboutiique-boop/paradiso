@@ -110,16 +110,16 @@ button {
 .brand-mark {
   display: grid;
   place-items: center;
-  width: 50px;
-  height: 44px;
-  flex: 0 0 50px;
+  width: 58px;
+  height: 50px;
+  flex: 0 0 58px;
 }
 
 .brand-symbol {
   grid-area: 1 / 1;
-  width: 36px;
-  height: 36px;
-  stroke-width: 1.7;
+  width: 46px;
+  height: 46px;
+  stroke-width: 1.55;
 }
 
 .brand-symbol-night,
@@ -1886,14 +1886,14 @@ body[data-theme="night"] .map-wrap {
   }
 
   .brand-mark {
-    width: 44px;
-    height: 40px;
-    flex-basis: 44px;
+    width: 50px;
+    height: 44px;
+    flex-basis: 50px;
   }
 
   .brand-symbol {
-    width: 31px;
-    height: 31px;
+    width: 40px;
+    height: 40px;
   }
 
   .header-actions {
