@@ -565,7 +565,6 @@ const productSearchInput = document.querySelector("#product-search");
 const productSearchResults = document.querySelector("#product-search-results");
 const productSearchClear = document.querySelector("#product-search-clear");
 const BOOKING_API_URL = "https://paradiso-bookings-api.fly.dev/v1/bookings";
-const BOOKING_EMAIL_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzd0ZEddVWO3gwgnD08PbNH_Yh4D5A1REOhCMGEp75DyxXWaVxxMtZtcQ79geN1mx1s/exec";
 let searchMatches = [];
 let activeSearchIndex = -1;
 
@@ -969,29 +968,6 @@ async function submitBooking(event) {
     const result = await response.json().catch(() => ({}));
     if (!response.ok) {
       throw new Error(result.error?.message || "Il servizio prenotazioni non è disponibile.");
-    }
-
-    try {
-      await fetch(BOOKING_EMAIL_WEBHOOK_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "text/plain;charset=UTF-8" },
-        body: JSON.stringify({
-          source: "paradiso-booking-v1",
-          website: "https://hallerboutiique-boop.github.io/paradiso/",
-          id: result.code,
-          name: result.customerName,
-          phone: result.phone,
-          email: result.email,
-          date: result.reservationDate,
-          time: result.reservationTime,
-          guests: result.guests,
-          notes: result.notes,
-          items: result.items,
-        }),
-      });
-    } catch {
-      showToast("Prenotazione salvata. La conferma email potrebbe arrivare in ritardo.");
     }
 
     document.querySelector("#confirmation-code").textContent = result.code;
